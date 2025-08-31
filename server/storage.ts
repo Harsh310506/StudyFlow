@@ -1,5 +1,6 @@
-import { type User, type InsertUser, type Task, type InsertTask } from "@shared/schema";
-import { randomUUID } from "crypto";
+import { users, tasks, type User, type InsertUser, type Task, type InsertTask } from "@shared/schema";
+import { db } from "./db";
+import { eq, and, gte, lt, lte, desc } from "drizzle-orm";
 
 export interface IStorage {
   // User methods
@@ -24,51 +25,47 @@ export interface IStorage {
   }>;
 }
 
-// Note: Currently using in-memory storage. MongoDB connection can be set up later.
-export class MemStorage implements IStorage {
-  private users: Map<string, User>;
-  private tasks: Map<string, Task>;
-
-  constructor() {
-    this.users = new Map();
-    this.tasks = new Map();
-  }
-
+export class DatabaseStorage implements IStorage {
   async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.email === email,
-    );
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user || undefined;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = randomUUID();
-    const user: User = { 
-      ...insertUser, 
-      id,
-      createdAt: new Date()
-    };
-    this.users.set(id, user);
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
     return user;
   }
 
   async getTask(id: string): Promise<Task | undefined> {
-    return this.tasks.get(id);
+    const [task] = await db.select().from(tasks).where(eq(tasks.id, id));
+    return task || undefined;
   }
 
   async getTasksByUserId(userId: string): Promise<Task[]> {
-    return Array.from(this.tasks.values()).filter(task => task.userId === userId);
+    return await db.select().from(tasks).where(eq(tasks.userId, userId)).orderBy(desc(tasks.createdAt));
   }
 
   async getTasksByUserIdAndDate(userId: string, date: string): Promise<Task[]> {
     const targetDate = new Date(date);
-    return Array.from(this.tasks.values()).filter(task => 
-      task.userId === userId && 
-      task.dueDate && 
-      new Date(task.dueDate).toDateString() === targetDate.toDateString()
+    const startOfDay = new Date(targetDate);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(targetDate);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    return await db.select().from(tasks).where(
+      and(
+        eq(tasks.userId, userId),
+        gte(tasks.dueDate, startOfDay),
+        lte(tasks.dueDate, endOfDay)
+      )
     );
   }
 
@@ -78,12 +75,15 @@ export class MemStorage implements IStorage {
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    return Array.from(this.tasks.values()).filter(task => 
-      task.userId === userId && 
-      (task.isOverallTask || 
-       (task.dueDate && 
-        new Date(task.dueDate) >= today && 
-        new Date(task.dueDate) < tomorrow))
+    // Get all tasks for the user
+    const allUserTasks = await db.select().from(tasks).where(eq(tasks.userId, userId));
+    
+    // Filter for today's tasks (overall tasks OR tasks due today)
+    return allUserTasks.filter(task => 
+      task.isOverallTask || 
+      (task.dueDate && 
+       new Date(task.dueDate) >= today && 
+       new Date(task.dueDate) < tomorrow)
     );
   }
 
@@ -93,45 +93,46 @@ export class MemStorage implements IStorage {
     const futureDate = new Date(today);
     futureDate.setDate(futureDate.getDate() + days);
 
-    return Array.from(this.tasks.values()).filter(task => 
-      task.userId === userId && 
-      !task.isOverallTask &&
-      task.dueDate && 
-      new Date(task.dueDate) > today && 
-      new Date(task.dueDate) <= futureDate
-    ).sort((a, b) => new Date(a.dueDate!).getTime() - new Date(b.dueDate!).getTime());
+    const allTasks = await db.select().from(tasks).where(
+      and(
+        eq(tasks.userId, userId),
+        eq(tasks.isOverallTask, false),
+        gte(tasks.dueDate, today),
+        lte(tasks.dueDate, futureDate)
+      )
+    ).orderBy(tasks.dueDate);
+
+    return allTasks;
   }
 
   async createTask(taskData: InsertTask & { userId: string }): Promise<Task> {
-    const id = randomUUID();
-    const task: Task = {
-      ...taskData,
-      description: taskData.description || null,
-      dueDate: taskData.dueDate || null,
-      dueTime: taskData.dueTime || null,
-      id,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    this.tasks.set(id, task);
+    const [task] = await db
+      .insert(tasks)
+      .values({
+        ...taskData,
+        priority: taskData.priority || "medium",
+        category: taskData.category || "assignment",
+        completionStatus: taskData.completionStatus || "pending",
+        isOverallTask: taskData.isOverallTask || false,
+        emailReminder: taskData.emailReminder || false,
+        pushReminder: taskData.pushReminder || false,
+      })
+      .returning();
     return task;
   }
 
   async updateTask(id: string, updates: Partial<Task>): Promise<Task | undefined> {
-    const task = this.tasks.get(id);
-    if (!task) return undefined;
-    
-    const updatedTask: Task = {
-      ...task,
-      ...updates,
-      updatedAt: new Date(),
-    };
-    this.tasks.set(id, updatedTask);
-    return updatedTask;
+    const [task] = await db
+      .update(tasks)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(tasks.id, id))
+      .returning();
+    return task || undefined;
   }
 
   async deleteTask(id: string): Promise<boolean> {
-    return this.tasks.delete(id);
+    const result = await db.delete(tasks).where(eq(tasks.id, id));
+    return (result.rowCount || 0) > 0;
   }
 
   async getTaskStats(userId: string): Promise<{
@@ -150,4 +151,4 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
