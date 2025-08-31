@@ -24,6 +24,7 @@ export interface IStorage {
   }>;
 }
 
+// Note: Currently using in-memory storage. MongoDB connection can be set up later.
 export class MemStorage implements IStorage {
   private users: Map<string, User>;
   private tasks: Map<string, Task>;
@@ -105,6 +106,9 @@ export class MemStorage implements IStorage {
     const id = randomUUID();
     const task: Task = {
       ...taskData,
+      description: taskData.description || null,
+      dueDate: taskData.dueDate || null,
+      dueTime: taskData.dueTime || null,
       id,
       createdAt: new Date(),
       updatedAt: new Date(),
