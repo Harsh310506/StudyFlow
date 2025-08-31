@@ -195,12 +195,12 @@ export default function Dashboard() {
             </div>
           </div>
           
-          {/* Today's Tasks Section */}
+          {/* All Pending Tasks Section */}
           <div className="px-4 sm:px-6 lg:px-8 mb-8">
             <div className="bg-card rounded-lg border border-border">
               <div className="px-6 py-4 border-b border-border">
-                <h2 className="text-lg font-semibold text-foreground">Today's Tasks</h2>
-                <p className="text-sm text-muted-foreground">Focus on what needs to be done today</p>
+                <h2 className="text-lg font-semibold text-foreground">All Pending Tasks</h2>
+                <p className="text-sm text-muted-foreground">Tasks due today and overall tasks to complete</p>
               </div>
               
               <div className="p-6 space-y-4">
