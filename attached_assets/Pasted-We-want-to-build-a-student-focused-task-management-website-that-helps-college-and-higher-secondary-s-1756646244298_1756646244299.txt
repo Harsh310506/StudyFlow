@@ -1,0 +1,18 @@
+We want to build a student-focused task management website that helps college and higher secondary students organize their daily and upcoming tasks. The website should allow users to create tasks that can be scheduled for today, tomorrow, or up to one month in advance. A key feature is an All Pending Tasks section that displays all incomplete tasks for the current day, so students can see what still needs to be done at a glance. Users should also be able to create overall tasks that remain visible every day until they are marked as complete.
+
+Each task should have the option to be marked as Fully Completed, Half Completed, or Partially Completed, ensuring flexibility for students who may not finish everything at once. Tasks should also support priority levels (high, medium, low) and categories (such as Assignments, Exams, Personal, Projects).
+
+The website should include a calendar-based interface where students can map their tasks onto specific dates. Days with tasks should be highlighted, and clicking on a date should show the assigned tasks. Additionally, the website should send reminder notifications (via email or in-browser notifications) so students don’t forget their deadlines or daily tasks.
+
+The Home Page/Dashboard should show all tasks due today with their completion status. An Add Task Page should allow users to enter a task title, description, date (or mark it as overall), select priority, and optionally set reminders. A Calendar Page should provide a monthly view, showing tasks assigned to each day. A simple Progress/Stats Page should show daily completion rates, like the percentage of tasks completed or total pending tasks.
+
+The website must support user accounts so multiple users can log in and manage their own tasks securely. Each user should have their own isolated task list. For authentication, implement basic email/password login (with JWT-based session handling or OAuth support in future versions).
+
+For the backend, use Node.js + Express.js with MongoDB Atlas as the database. The MongoDB Atlas cluster connection string should be:
+
+mongodb+srv://herohonda3258_db_user:<db_password>@cluster0-om.ujibmzc.mongodb.net/
+
+
+Store users and their tasks in separate collections (e.g., users, tasks) and ensure proper user-task relationship mapping. The frontend should be built using React.js with a clean, minimal, and student-friendly UI. The app should also include dark mode support for students working late at night.
+
+For now, the MVP will focus on essential features: multi-user login, task management (with partial completion options), calendar integration, reminders, and progress tracking. Future upgrades may include collaborative task sharing, cloud sync with mobile apps, and AI-based task prioritization.
