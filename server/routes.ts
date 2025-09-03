@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertUserSchema, insertTaskSchema, loginSchema, insertPasswordSchema, verifyPasswordSchema } from "@shared/schema";
+import { insertUserSchema, insertTaskSchema, loginSchema, insertPasswordSchema, verifyPasswordSchema, insertNoteSchema } from "@shared/schema";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { z } from "zod";
@@ -328,6 +328,82 @@ export async function registerRoutes(app: Express): Promise<Server> {
         res.status(204).send();
       } else {
         res.status(404).json({ message: "Password not found" });
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Note management routes
+  app.get("/api/notes", authenticateToken, async (req: any, res) => {
+    try {
+      // First delete expired notes
+      await storage.deleteExpiredNotes();
+      
+      // Then get current notes
+      const notes = await storage.getNotesByUserId(req.userId);
+      res.json(notes);
+    } catch (error) {
+      console.error("Error fetching notes:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post("/api/notes", authenticateToken, async (req: any, res) => {
+    try {
+      const noteData = insertNoteSchema.parse(req.body);
+      const note = await storage.createNote({
+        ...noteData,
+        userId: req.userId,
+      });
+      res.status(201).json(note);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      console.error("Note creation error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.patch("/api/notes/:id", authenticateToken, async (req: any, res) => {
+    try {
+      const noteId = req.params.id;
+      const updates = req.body;
+      
+      // Verify note belongs to user
+      const existingNote = await storage.getNote(noteId);
+      if (!existingNote || existingNote.userId !== req.userId) {
+        return res.status(404).json({ message: "Note not found" });
+      }
+
+      const updatedNote = await storage.updateNote(noteId, updates);
+      if (updatedNote) {
+        res.json(updatedNote);
+      } else {
+        res.status(404).json({ message: "Note not found" });
+      }
+    } catch (error) {
+      console.error("Note update error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.delete("/api/notes/:id", authenticateToken, async (req: any, res) => {
+    try {
+      const noteId = req.params.id;
+      
+      // Verify note belongs to user
+      const existingNote = await storage.getNote(noteId);
+      if (!existingNote || existingNote.userId !== req.userId) {
+        return res.status(404).json({ message: "Note not found" });
+      }
+
+      const deleted = await storage.deleteNote(noteId);
+      if (deleted) {
+        res.status(204).send();
+      } else {
+        res.status(404).json({ message: "Note not found" });
       }
     } catch (error) {
       res.status(500).json({ message: "Internal server error" });

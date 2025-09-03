@@ -12,6 +12,7 @@ import Dashboard from "@/pages/dashboard";
 import AddTask from "@/pages/add-task";
 import Calendar from "@/pages/calendar";
 import PasswordManager from "@/pages/password-manager";
+import NotesManager from "@/pages/notes-manager";
 import Progress from "@/pages/progress";
 
 function Router() {
@@ -37,6 +38,11 @@ function Router() {
       <Route path="/password-manager">
         <ProtectedRoute>
           <PasswordManager />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/notes">
+        <ProtectedRoute>
+          <NotesManager />
         </ProtectedRoute>
       </Route>
       <Route path="/progress">

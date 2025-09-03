@@ -1,4 +1,4 @@
-import { users, tasks, passwords, type User, type InsertUser, type Task, type InsertTask, type Password, type InsertPassword } from "@shared/schema";
+import { users, tasks, passwords, notes, type User, type InsertUser, type Task, type InsertTask, type Password, type InsertPassword, type Note, type InsertNote } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, gte, lt, lte, desc } from "drizzle-orm";
 import bcrypt from "bcrypt";
@@ -33,6 +33,14 @@ export interface IStorage {
   updatePassword(id: string, updates: Partial<InsertPassword>): Promise<Password | undefined>;
   deletePassword(id: string): Promise<boolean>;
   decryptPassword(encryptedPassword: string, userPassword: string): Promise<string>;
+
+  // Note methods
+  getNotesByUserId(userId: string): Promise<Note[]>;
+  getNote(id: string): Promise<Note | undefined>;
+  createNote(noteData: InsertNote & { userId: string }): Promise<Note>;
+  updateNote(id: string, updates: Partial<InsertNote>): Promise<Note | undefined>;
+  deleteNote(id: string): Promise<boolean>;
+  deleteExpiredNotes(): Promise<number>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -214,6 +222,66 @@ export class DatabaseStorage implements IStorage {
     // This is a simple approach - in reality, we would use proper encryption/decryption
     // For now, we'll return a placeholder since bcrypt is one-way
     return "••••••••"; // Placeholder for actual password
+  }
+
+  // Note methods implementation
+  async getNotesByUserId(userId: string): Promise<Note[]> {
+    return await db.select().from(notes).where(eq(notes.userId, userId)).orderBy(desc(notes.createdAt));
+  }
+
+  async getNote(id: string): Promise<Note | undefined> {
+    const [note] = await db.select().from(notes).where(eq(notes.id, id));
+    return note || undefined;
+  }
+
+  async createNote(noteData: InsertNote & { userId: string }): Promise<Note> {
+    // Set expiration date to 5 days from now unless bookmarked
+    const expiresAt = noteData.isBookmarked ? null : new Date(Date.now() + 5 * 24 * 60 * 60 * 1000);
+    
+    const [note] = await db
+      .insert(notes)
+      .values({
+        ...noteData,
+        expiresAt,
+      })
+      .returning();
+    return note;
+  }
+
+  async updateNote(id: string, updates: Partial<InsertNote>): Promise<Note | undefined> {
+    let updateData: any = { ...updates, updatedAt: new Date() };
+    
+    // If bookmarking status is being changed, update expiration
+    if (updates.isBookmarked !== undefined) {
+      if (updates.isBookmarked) {
+        updateData.expiresAt = null; // Remove expiration if bookmarked
+      } else {
+        updateData.expiresAt = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000); // Set to expire in 5 days
+      }
+    }
+
+    const [note] = await db
+      .update(notes)
+      .set(updateData)
+      .where(eq(notes.id, id))
+      .returning();
+    return note || undefined;
+  }
+
+  async deleteNote(id: string): Promise<boolean> {
+    const result = await db.delete(notes).where(eq(notes.id, id));
+    return (result.rowCount || 0) > 0;
+  }
+
+  async deleteExpiredNotes(): Promise<number> {
+    const now = new Date();
+    const result = await db.delete(notes).where(
+      and(
+        eq(notes.isBookmarked, false),
+        lte(notes.expiresAt, now)
+      )
+    );
+    return result.rowCount || 0;
   }
 }
 

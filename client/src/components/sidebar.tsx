@@ -34,6 +34,7 @@ export function Sidebar() {
     { path: "/add-task", icon: "fas fa-plus", label: "Add Task", key: "add-task" },
     { path: "/calendar", icon: "fas fa-calendar", label: "Calendar", key: "calendar" },
     { path: "/password-manager", icon: "fas fa-shield-alt", label: "Password Manager", key: "password-manager" },
+    { path: "/notes", icon: "fas fa-file-text", label: "Notes Manager", key: "notes" },
     { path: "/progress", icon: "fas fa-chart-line", label: "Progress", key: "progress" },
   ];
 
