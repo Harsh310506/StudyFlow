@@ -167,7 +167,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/tasks", authenticateToken, async (req: any, res) => {
     try {
-      const taskData = insertTaskSchema.parse(req.body);
+      // Transform the data to handle frontend-backend compatibility
+      const transformedData = {
+        ...req.body,
+        // Convert empty strings to null for optional fields
+        description: req.body.description || null,
+        dueTime: req.body.dueTime || null,
+        // Handle dueDate conversion - if it's already a Date object, keep it, otherwise convert
+        dueDate: req.body.dueDate ? (req.body.dueDate instanceof Date ? req.body.dueDate : new Date(req.body.dueDate)) : null,
+        // Ensure boolean fields are properly converted
+        isOverallTask: Boolean(req.body.isOverallTask),
+        emailReminder: Boolean(req.body.emailReminder),
+        pushReminder: Boolean(req.body.pushReminder),
+      };
+
+      const taskData = insertTaskSchema.parse(transformedData);
       const task = await storage.createTask({
         ...taskData,
         userId: req.userId,
@@ -177,6 +191,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Validation error", errors: error.errors });
       }
+      console.error("Task creation error:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   });
