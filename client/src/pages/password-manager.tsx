@@ -310,7 +310,7 @@ export default function PasswordManager() {
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="text-right text-sm text-muted-foreground">
-                          <p>Added {new Date(password.createdAt).toLocaleDateString()}</p>
+                          <p>Added {password.createdAt ? new Date(password.createdAt).toLocaleDateString() : 'Unknown date'}</p>
                         </div>
                         <div className="flex items-center gap-1">
                           <Button
