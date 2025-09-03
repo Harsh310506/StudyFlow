@@ -33,6 +33,7 @@ export function Sidebar() {
     { path: "/", icon: "fas fa-home", label: "Dashboard", key: "dashboard" },
     { path: "/add-task", icon: "fas fa-plus", label: "Add Task", key: "add-task" },
     { path: "/calendar", icon: "fas fa-calendar", label: "Calendar", key: "calendar" },
+    { path: "/password-manager", icon: "fas fa-shield-alt", label: "Password Manager", key: "password-manager" },
     { path: "/progress", icon: "fas fa-chart-line", label: "Progress", key: "progress" },
   ];
 

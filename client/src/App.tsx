@@ -11,6 +11,7 @@ import Register from "@/pages/register";
 import Dashboard from "@/pages/dashboard";
 import AddTask from "@/pages/add-task";
 import Calendar from "@/pages/calendar";
+import PasswordManager from "@/pages/password-manager";
 import Progress from "@/pages/progress";
 
 function Router() {
@@ -31,6 +32,11 @@ function Router() {
       <Route path="/calendar">
         <ProtectedRoute>
           <Calendar />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/password-manager">
+        <ProtectedRoute>
+          <PasswordManager />
         </ProtectedRoute>
       </Route>
       <Route path="/progress">

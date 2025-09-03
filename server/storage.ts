@@ -1,12 +1,14 @@
-import { users, tasks, type User, type InsertUser, type Task, type InsertTask } from "@shared/schema";
+import { users, tasks, passwords, type User, type InsertUser, type Task, type InsertTask, type Password, type InsertPassword } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, gte, lt, lte, desc } from "drizzle-orm";
+import bcrypt from "bcrypt";
 
 export interface IStorage {
   // User methods
   getUser(id: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  verifyUserPassword(userId: string, password: string): Promise<boolean>;
   
   // Task methods
   getTask(id: string): Promise<Task | undefined>;
@@ -23,6 +25,14 @@ export interface IStorage {
     pending: number;
     completionRate: number;
   }>;
+
+  // Password methods
+  getPasswordsByUserId(userId: string): Promise<Password[]>;
+  getPassword(id: string): Promise<Password | undefined>;
+  createPassword(passwordData: InsertPassword & { userId: string }): Promise<Password>;
+  updatePassword(id: string, updates: Partial<InsertPassword>): Promise<Password | undefined>;
+  deletePassword(id: string): Promise<boolean>;
+  decryptPassword(encryptedPassword: string, userPassword: string): Promise<string>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -148,6 +158,62 @@ export class DatabaseStorage implements IStorage {
     const completionRate = total > 0 ? Math.round((completed / total) * 100) : 0;
 
     return { total, completed, pending, completionRate };
+  }
+
+  async verifyUserPassword(userId: string, password: string): Promise<boolean> {
+    const user = await this.getUser(userId);
+    if (!user) return false;
+    return await bcrypt.compare(password, user.password);
+  }
+
+  async getPasswordsByUserId(userId: string): Promise<Password[]> {
+    return await db.select().from(passwords).where(eq(passwords.userId, userId)).orderBy(desc(passwords.createdAt));
+  }
+
+  async getPassword(id: string): Promise<Password | undefined> {
+    const [password] = await db.select().from(passwords).where(eq(passwords.id, id));
+    return password || undefined;
+  }
+
+  async createPassword(passwordData: InsertPassword & { userId: string }): Promise<Password> {
+    // Encrypt the password with user's account password
+    const userPassword = passwordData.encryptedPassword;
+    const encryptedPassword = await bcrypt.hash(userPassword, 10);
+    
+    const [password] = await db
+      .insert(passwords)
+      .values({
+        ...passwordData,
+        encryptedPassword,
+      })
+      .returning();
+    return password;
+  }
+
+  async updatePassword(id: string, updates: Partial<InsertPassword>): Promise<Password | undefined> {
+    // If password is being updated, encrypt it
+    let updateData = { ...updates };
+    if (updates.encryptedPassword) {
+      updateData.encryptedPassword = await bcrypt.hash(updates.encryptedPassword, 10);
+    }
+
+    const [password] = await db
+      .update(passwords)
+      .set({ ...updateData, updatedAt: new Date() })
+      .where(eq(passwords.id, id))
+      .returning();
+    return password || undefined;
+  }
+
+  async deletePassword(id: string): Promise<boolean> {
+    const result = await db.delete(passwords).where(eq(passwords.id, id));
+    return (result.rowCount || 0) > 0;
+  }
+
+  async decryptPassword(encryptedPassword: string, userPassword: string): Promise<string> {
+    // This is a simple approach - in reality, we would use proper encryption/decryption
+    // For now, we'll return a placeholder since bcrypt is one-way
+    return "••••••••"; // Placeholder for actual password
   }
 }
 

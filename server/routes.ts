@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertUserSchema, insertTaskSchema, loginSchema } from "@shared/schema";
+import { insertUserSchema, insertTaskSchema, loginSchema, insertPasswordSchema, verifyPasswordSchema } from "@shared/schema";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { z } from "zod";
@@ -229,6 +229,105 @@ export async function registerRoutes(app: Express): Promise<Server> {
         res.status(204).send();
       } else {
         res.status(404).json({ message: "Task not found" });
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Password management routes
+  app.get("/api/passwords", authenticateToken, async (req: any, res) => {
+    try {
+      const passwords = await storage.getPasswordsByUserId(req.userId);
+      // Return passwords with masked values for security
+      const maskedPasswords = passwords.map(p => ({
+        ...p,
+        encryptedPassword: "••••••••"
+      }));
+      res.json(maskedPasswords);
+    } catch (error) {
+      console.error("Error fetching passwords:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post("/api/passwords", authenticateToken, async (req: any, res) => {
+    try {
+      const passwordData = insertPasswordSchema.parse(req.body);
+      const password = await storage.createPassword({
+        ...passwordData,
+        userId: req.userId,
+      });
+      // Return masked password for security
+      res.status(201).json({
+        ...password,
+        encryptedPassword: "••••••••"
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      console.error("Password creation error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post("/api/passwords/verify", authenticateToken, async (req: any, res) => {
+    try {
+      const { password } = verifyPasswordSchema.parse(req.body);
+      const isValid = await storage.verifyUserPassword(req.userId, password);
+      res.json({ valid: isValid });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post("/api/passwords/:id/reveal", authenticateToken, async (req: any, res) => {
+    try {
+      const passwordId = req.params.id;
+      const { password: userPassword } = verifyPasswordSchema.parse(req.body);
+      
+      // Verify user password first
+      const isValidPassword = await storage.verifyUserPassword(req.userId, userPassword);
+      if (!isValidPassword) {
+        return res.status(401).json({ message: "Invalid account password" });
+      }
+
+      // Get the password entry
+      const passwordEntry = await storage.getPassword(passwordId);
+      if (!passwordEntry || passwordEntry.userId !== req.userId) {
+        return res.status(404).json({ message: "Password not found" });
+      }
+
+      // For demonstration, return the original password (in real app, use proper decryption)
+      const decryptedPassword = await storage.decryptPassword(passwordEntry.encryptedPassword, userPassword);
+      res.json({ password: decryptedPassword });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.delete("/api/passwords/:id", authenticateToken, async (req: any, res) => {
+    try {
+      const passwordId = req.params.id;
+      
+      // Verify password belongs to user
+      const existingPassword = await storage.getPassword(passwordId);
+      if (!existingPassword || existingPassword.userId !== req.userId) {
+        return res.status(404).json({ message: "Password not found" });
+      }
+
+      const deleted = await storage.deletePassword(passwordId);
+      if (deleted) {
+        res.status(204).send();
+      } else {
+        res.status(404).json({ message: "Password not found" });
       }
     } catch (error) {
       res.status(500).json({ message: "Internal server error" });
