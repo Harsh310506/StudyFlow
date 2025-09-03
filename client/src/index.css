@@ -4,13 +4,13 @@
 @tailwind utilities;
 
 :root {
-  --background: hsl(210, 40%, 98%);
+  --background: hsl(0, 0%, 100%);
   --foreground: hsl(222.2, 84%, 4.9%);
   --card: hsl(0, 0%, 100%);
   --card-foreground: hsl(222.2, 84%, 4.9%);
   --popover: hsl(0, 0%, 100%);
   --popover-foreground: hsl(222.2, 84%, 4.9%);
-  --primary: hsl(263, 70%, 50%);
+  --primary: hsl(221.2, 83.2%, 53.3%);
   --primary-foreground: hsl(210, 40%, 98%);
   --secondary: hsl(210, 40%, 96%);
   --secondary-foreground: hsl(222.2, 84%, 4.9%);
@@ -22,14 +22,11 @@
   --destructive-foreground: hsl(210, 40%, 98%);
   --border: hsl(214.3, 31.8%, 91.4%);
   --input: hsl(214.3, 31.8%, 91.4%);
-  --ring: hsl(263, 70%, 50%);
+  --ring: hsl(221.2, 83.2%, 53.3%);
   --success: hsl(142.1, 76.2%, 36.3%);
   --warning: hsl(45.4, 93.4%, 47.5%);
-  --radius: 0.75rem;
+  --radius: 0.5rem;
   --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-  --gradient-primary: linear-gradient(135deg, hsl(263, 70%, 50%), hsl(221.2, 83.2%, 53.3%));
-  --gradient-secondary: linear-gradient(135deg, hsl(142.1, 76.2%, 36.3%), hsl(174, 77%, 56%));
-  --gradient-warning: linear-gradient(135deg, hsl(45.4, 93.4%, 47.5%), hsl(31, 91%, 60%));
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -38,30 +35,27 @@
 }
 
 .dark {
-  --background: hsl(224, 71%, 4%);
-  --foreground: hsl(213, 31%, 91%);
-  --card: hsl(224, 71%, 4%);
-  --card-foreground: hsl(213, 31%, 91%);
-  --popover: hsl(224, 71%, 4%);
-  --popover-foreground: hsl(213, 31%, 91%);
-  --primary: hsl(263, 70%, 50%);
-  --primary-foreground: hsl(210, 40%, 98%);
-  --secondary: hsl(215, 25%, 27%);
+  --background: hsl(222.2, 84%, 4.9%);
+  --foreground: hsl(210, 40%, 98%);
+  --card: hsl(222.2, 84%, 4.9%);
+  --card-foreground: hsl(210, 40%, 98%);
+  --popover: hsl(222.2, 84%, 4.9%);
+  --popover-foreground: hsl(210, 40%, 98%);
+  --primary: hsl(217.2, 91.2%, 59.8%);
+  --primary-foreground: hsl(222.2, 84%, 4.9%);
+  --secondary: hsl(217.2, 32.6%, 17.5%);
   --secondary-foreground: hsl(210, 40%, 98%);
-  --muted: hsl(215, 25%, 27%);
-  --muted-foreground: hsl(217.9, 10.6%, 64.9%);
-  --accent: hsl(215, 25%, 27%);
+  --muted: hsl(217.2, 32.6%, 17.5%);
+  --muted-foreground: hsl(215, 20.2%, 65.1%);
+  --accent: hsl(217.2, 32.6%, 17.5%);
   --accent-foreground: hsl(210, 40%, 98%);
   --destructive: hsl(0, 62.8%, 30.6%);
   --destructive-foreground: hsl(210, 40%, 98%);
-  --border: hsl(215, 25%, 27%);
-  --input: hsl(215, 25%, 27%);
-  --ring: hsl(263, 70%, 50%);
+  --border: hsl(217.2, 32.6%, 17.5%);
+  --input: hsl(217.2, 32.6%, 17.5%);
+  --ring: hsl(224.3, 76.3%, 94.0%);
   --success: hsl(142.1, 70.6%, 45.3%);
   --warning: hsl(45.4, 93.4%, 47.5%);
-  --gradient-primary: linear-gradient(135deg, hsl(263, 70%, 50%), hsl(221.2, 83.2%, 53.3%));
-  --gradient-secondary: linear-gradient(135deg, hsl(142.1, 76.2%, 36.3%), hsl(174, 77%, 56%));
-  --gradient-warning: linear-gradient(135deg, hsl(45.4, 93.4%, 47.5%), hsl(31, 91%, 60%));
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
   --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
@@ -77,12 +71,6 @@
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
-    background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0);
-    background-size: 20px 20px;
-  }
-  
-  .dark body {
-    background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0);
   }
 }
 
@@ -115,79 +103,73 @@
   background-color: hsl(var(--accent));
 }
 
-/* Animation for days with tasks */
+/* Calendar day animations for tasks */
 .has-task-indicators {
   position: relative;
-  animation: taskPulse 1.5s ease-in-out infinite, taskGlow 3s ease-in-out infinite alternate;
-  border: 2px solid hsl(var(--primary) / 0.3);
-  background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--primary) / 0.05));
+  border-left: 3px solid hsl(var(--primary));
+  background: hsl(var(--primary) / 0.02);
 }
 
-.has-task-indicators::before {
+.has-task-indicators::after {
   content: '';
   position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(45deg, hsl(var(--primary) / 0.2), hsl(var(--success) / 0.2), hsl(var(--warning) / 0.2));
-  border-radius: 6px;
-  pointer-events: none;
-  z-index: -1;
-  animation: borderRotate 4s linear infinite;
+  top: 2px;
+  right: 2px;
+  width: 8px;
+  height: 8px;
+  background: hsl(var(--primary));
+  border-radius: 50%;
+  animation: taskPulse 2s ease-in-out infinite;
 }
 
 .has-task-indicators:hover {
-  animation: taskPulse 0.8s ease-in-out infinite, taskGlow 1.5s ease-in-out infinite alternate;
-  transform: scale(1.02);
+  background: hsl(var(--primary) / 0.05);
+  border-left-color: hsl(var(--primary));
+  transform: translateX(2px);
 }
 
-.has-task-indicators > * {
-  position: relative;
-  z-index: 1;
+.has-task-indicators:hover::after {
+  animation: taskPulse 1s ease-in-out infinite;
 }
 
-/* Pulsing animation */
+/* Task indicator bars animation */
+.task-indicator-bar {
+  animation: slideIn 0.3s ease-out forwards;
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.task-indicator-bar:nth-child(1) { animation-delay: 0.1s; }
+.task-indicator-bar:nth-child(2) { animation-delay: 0.2s; }
+.task-indicator-bar:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes slideIn {
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+/* Subtle pulsing animation for task indicator dot */
 @keyframes taskPulse {
   0%, 100% {
-    box-shadow: 0 0 8px hsl(var(--primary) / 0.4);
+    opacity: 0.8;
+    transform: scale(1);
   }
   50% {
-    box-shadow: 0 0 16px hsl(var(--primary) / 0.6), 0 0 24px hsl(var(--primary) / 0.3);
+    opacity: 1;
+    transform: scale(1.2);
   }
 }
 
-/* Glow animation */
-@keyframes taskGlow {
-  from {
-    filter: brightness(1);
-  }
-  to {
-    filter: brightness(1.1);
-  }
+/* Calendar day hover effect */
+.calendar-day {
+  transition: all 0.2s ease-in-out;
 }
 
-/* Rotating border animation */
-@keyframes borderRotate {
-  0% {
-    background: linear-gradient(45deg, hsl(var(--primary) / 0.3), hsl(var(--success) / 0.3), hsl(var(--warning) / 0.3));
-  }
-  33% {
-    background: linear-gradient(45deg, hsl(var(--success) / 0.3), hsl(var(--warning) / 0.3), hsl(var(--primary) / 0.3));
-  }
-  66% {
-    background: linear-gradient(45deg, hsl(var(--warning) / 0.3), hsl(var(--primary) / 0.3), hsl(var(--success) / 0.3));
-  }
-  100% {
-    background: linear-gradient(45deg, hsl(var(--primary) / 0.3), hsl(var(--success) / 0.3), hsl(var(--warning) / 0.3));
-  }
-}
-
-/* Enhanced glow for selected days with tasks */
-.has-task-indicators.bg-primary {
-  animation: none;
-  box-shadow: 0 0 20px hsl(var(--primary) / 0.6);
-  border: 2px solid hsl(var(--primary));
+.calendar-day:hover {
+  background-color: hsl(var(--accent));
 }
 
 .has-tasks {
@@ -210,97 +192,32 @@
   color: hsl(var(--muted-foreground));
 }
 
-/* Modern UI Enhancements */
-.glass-effect {
-  backdrop-filter: blur(16px) saturate(180%);
-  background-color: rgba(255, 255, 255, 0.75);
-  border: 1px solid rgba(209, 213, 219, 0.3);
-}
-
-.dark .glass-effect {
-  background-color: rgba(15, 23, 42, 0.75);
-  border: 1px solid rgba(55, 65, 81, 0.3);
-}
-
-.gradient-text {
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
+/* Simplified UI Components */
 .card-hover {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s ease-in-out;
   cursor: pointer;
 }
 
 .card-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-}
-
-.btn-gradient {
-  background: var(--gradient-primary);
-  border: none;
-  color: white;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.btn-gradient::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
-}
-
-.btn-gradient:hover::before {
-  left: 100%;
-}
-
-.btn-gradient:hover {
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }
 
 .stats-card {
-  background: white;
+  background: hsl(var(--card));
   border-radius: var(--radius);
   border: 1px solid hsl(var(--border));
-  box-shadow: var(--shadow);
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.dark .stats-card {
-  background: hsl(var(--card));
-}
-
-.stats-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: var(--gradient-primary);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease-in-out;
 }
 
 .stats-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow);
 }
 
 .sidebar-item {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s ease-in-out;
   position: relative;
-  overflow: hidden;
 }
 
 .sidebar-item::before {
@@ -310,9 +227,9 @@
   top: 0;
   height: 100%;
   width: 3px;
-  background: var(--gradient-primary);
+  background: hsl(var(--primary));
   transform: scaleY(0);
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.2s ease-in-out;
 }
 
 .sidebar-item.active::before {
@@ -321,60 +238,11 @@
 
 .sidebar-item:hover {
   background-color: hsl(var(--accent));
-  padding-left: 1rem;
 }
 
-.floating-action {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: var(--gradient-primary);
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-  box-shadow: var(--shadow-lg);
-  z-index: 50;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.floating-action:hover {
-  transform: scale(1.1) rotate(90deg);
-  box-shadow: var(--shadow-xl);
-}
-
-.pulse-animation {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-.slide-in-up {
-  animation: slideInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes slideInUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
 
 .fade-in {
-  animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeIn 0.3s ease-in-out;
 }
 
 @keyframes fadeIn {

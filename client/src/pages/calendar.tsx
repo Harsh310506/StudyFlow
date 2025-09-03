@@ -85,19 +85,23 @@ export default function Calendar() {
             <div className="mb-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h1 className="text-2xl font-bold text-foreground">Calendar</h1>
-                  <p className="mt-1 text-sm text-muted-foreground">View and manage your tasks by date</p>
+                  <h1 className="text-2xl font-bold text-foreground flex items-center">
+                    <i className="fas fa-calendar text-primary mr-3"></i>
+                    Calendar View
+                  </h1>
+                  <p className="mt-1 text-sm text-muted-foreground">Track your tasks across dates with visual indicators</p>
                 </div>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-4">
                   <Button 
                     variant="outline" 
                     size="sm"
                     onClick={previousMonth}
                     data-testid="button-previous-month"
+                    className="hover:bg-accent"
                   >
-                    <i className="fas fa-chevron-left w-4 h-4"></i>
+                    <i className="fas fa-chevron-left"></i>
                   </Button>
-                  <h2 className="text-lg font-semibold text-foreground px-4" data-testid="text-current-month">
+                  <h2 className="text-lg font-semibold text-foreground min-w-[200px] text-center" data-testid="text-current-month">
                     {formatMonth(currentDate)}
                   </h2>
                   <Button 
@@ -105,8 +109,9 @@ export default function Calendar() {
                     size="sm"
                     onClick={nextMonth}
                     data-testid="button-next-month"
+                    className="hover:bg-accent"
                   >
-                    <i className="fas fa-chevron-right w-4 h-4"></i>
+                    <i className="fas fa-chevron-right"></i>
                   </Button>
                 </div>
               </div>
@@ -149,18 +154,21 @@ export default function Calendar() {
                       </span>
                       
                       {tasksForDay.length > 0 && isCurrentMonth && (
-                        <div className="mt-1 space-y-1">
-                          {tasksForDay.slice(0, 3).map((task: Task) => (
+                        <div className="mt-2 space-y-1">
+                          {tasksForDay.slice(0, 3).map((task: Task, taskIndex: number) => (
                             <div 
                               key={task.id}
-                              className={`w-full h-1 rounded-full opacity-80 ${
+                              className={`task-indicator-bar w-full h-1.5 rounded-full ${
                                 task.priority === 'high' ? 'bg-destructive' :
                                 task.priority === 'medium' ? 'bg-warning' : 'bg-success'
                               }`}
+                              style={{animationDelay: `${taskIndex * 0.1}s`}}
                             />
                           ))}
                           {tasksForDay.length > 3 && (
-                            <div className="text-xs text-center">+{tasksForDay.length - 3}</div>
+                            <div className="text-xs text-center text-muted-foreground font-medium mt-1">
+                              +{tasksForDay.length - 3} more
+                            </div>
                           )}
                         </div>
                       )}
@@ -172,9 +180,10 @@ export default function Calendar() {
             
             {/* Selected Date Tasks */}
             {selectedDate && (
-              <div className="bg-card rounded-lg border border-border">
+              <div className="bg-card rounded-lg border border-border fade-in">
                 <div className="px-6 py-4 border-b border-border">
-                  <h3 className="text-lg font-semibold text-foreground">
+                  <h3 className="text-lg font-semibold text-foreground flex items-center">
+                    <i className="fas fa-calendar-day text-primary mr-3"></i>
                     Tasks for {selectedDate.toLocaleDateString('en-US', { 
                       weekday: 'long', 
                       year: 'numeric', 
@@ -185,25 +194,32 @@ export default function Calendar() {
                 </div>
                 <div className="p-6">
                   {selectedDateTasks.length === 0 ? (
-                    <div className="text-center py-8">
-                      <i className="fas fa-calendar-plus text-muted-foreground text-3xl mb-4"></i>
-                      <p className="text-muted-foreground">No tasks scheduled for this date.</p>
+                    <div className="text-center py-12">
+                      <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i className="fas fa-calendar-plus text-muted-foreground text-xl"></i>
+                      </div>
+                      <h4 className="text-base font-medium text-foreground mb-2">No tasks scheduled</h4>
+                      <p className="text-muted-foreground text-sm">This day is free - perfect for spontaneous activities!</p>
                     </div>
                   ) : (
-                    <div className="space-y-3">
-                      {selectedDateTasks.map((task: Task) => (
-                        <div key={task.id} className={`task-card priority-${task.priority} bg-background rounded-lg border border-border p-3`}>
+                    <div className="space-y-4">
+                      {selectedDateTasks.map((task: Task, index: number) => (
+                        <div key={task.id} className={`stats-card card-hover p-4 fade-in`} style={{animationDelay: `${index * 0.1}s`}}>
                           <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-3">
-                              <div className={`w-2 h-2 rounded-full ${
+                            <div className="flex items-center space-x-4">
+                              <div className={`w-3 h-3 rounded-full ${
                                 task.priority === 'high' ? 'bg-destructive' : 
                                 task.priority === 'medium' ? 'bg-warning' : 'bg-success'
                               }`}></div>
-                              <div>
-                                <h4 className="text-sm font-medium text-foreground">{task.title}</h4>
+                              <div className="flex-1">
+                                <h4 className="text-sm font-semibold text-foreground">{task.title}</h4>
+                                {task.description && (
+                                  <p className="text-xs text-muted-foreground mt-1">{task.description}</p>
+                                )}
                                 {task.dueTime && (
-                                  <p className="text-xs text-muted-foreground">
-                                    Due: {new Date(`2000-01-01T${task.dueTime}`).toLocaleTimeString([], { 
+                                  <p className="text-xs text-muted-foreground mt-1">
+                                    <i className="fas fa-clock mr-1"></i>
+                                    {new Date(`2000-01-01T${task.dueTime}`).toLocaleTimeString([], { 
                                       hour: 'numeric', 
                                       minute: '2-digit' 
                                     })}
@@ -211,12 +227,17 @@ export default function Calendar() {
                                 )}
                               </div>
                             </div>
-                            <span className={`text-xs px-2 py-1 rounded-full ${
-                              task.priority === 'high' ? 'bg-destructive/10 text-destructive' :
-                              task.priority === 'medium' ? 'bg-warning/10 text-warning' : 'bg-success/10 text-success'
-                            }`}>
-                              {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
-                            </span>
+                            <div className="flex items-center space-x-2">
+                              <span className={`text-xs px-2 py-1 rounded-md ${
+                                task.priority === 'high' ? 'bg-destructive/10 text-destructive' :
+                                task.priority === 'medium' ? 'bg-warning/10 text-warning' : 'bg-success/10 text-success'
+                              }`}>
+                                {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
+                              </span>
+                              <span className={`text-xs px-2 py-1 rounded-md bg-muted text-muted-foreground`}>
+                                {task.category}
+                              </span>
+                            </div>
                           </div>
                         </div>
                       ))}

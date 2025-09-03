@@ -90,19 +90,8 @@ export default function Dashboard() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
-          <div className="relative">
-            <div className="w-16 h-16 border-4 border-gray-200 dark:border-gray-700 rounded-full mb-4"></div>
-            <div className="absolute inset-0 w-16 h-16 border-4 border-t-purple-500 border-r-blue-500 border-b-emerald-500 border-l-amber-500 rounded-full animate-spin mx-auto mb-4"></div>
-          </div>
-          <div className="space-y-2">
-            <p className="text-lg font-semibold gradient-text">Loading StudyFlow</p>
-            <p className="text-muted-foreground text-sm">Preparing your personalized dashboard...</p>
-          </div>
-          <div className="flex justify-center space-x-1 mt-6">
-            <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{animationDelay: '0s'}}></div>
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-          </div>
+          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading your tasks...</p>
         </div>
       </div>
     );
@@ -117,118 +106,93 @@ export default function Dashboard() {
         
         <main className="flex-1 overflow-y-auto bg-background">
           {/* Header Section */}
-          <div className="px-4 sm:px-6 lg:px-8 py-8">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-emerald-500/10 rounded-3xl blur-3xl"></div>
-              <div className="relative bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/50">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h1 className="text-3xl font-bold gradient-text slide-in-up" data-testid="text-greeting">
-                      {getGreeting()}, {user?.firstName || "Student"}!
-                    </h1>
-                    <p className="mt-2 text-muted-foreground slide-in-up" style={{animationDelay: '0.1s'}} data-testid="text-today-date">
-                      Today is {formatDate(new Date())}
-                    </p>
-                  </div>
-                  <button 
-                    onClick={() => setLocation("/add-task")}
-                    className="btn-gradient px-6 py-3 rounded-xl font-semibold transition-all duration-300 slide-in-up"
-                    style={{animationDelay: '0.2s'}}
-                    data-testid="button-add-task"
-                  >
-                    <i className="fas fa-plus mr-2"></i>
-                    Add Task
-                  </button>
+          <div className="px-4 sm:px-6 lg:px-8 py-6">
+            <div className="bg-card rounded-lg border border-border p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-2xl font-bold text-foreground" data-testid="text-greeting">
+                    {getGreeting()}, {user?.firstName || "Student"}!
+                  </h1>
+                  <p className="mt-1 text-muted-foreground" data-testid="text-today-date">
+                    Today is {formatDate(new Date())}
+                  </p>
                 </div>
+                <Button 
+                  onClick={() => setLocation("/add-task")}
+                  data-testid="button-add-task"
+                  className="bg-primary hover:bg-primary/90"
+                >
+                  <i className="fas fa-plus mr-2"></i>
+                  Add Task
+                </Button>
               </div>
             </div>
           </div>
           
           {/* Stats Overview */}
-          <div className="px-4 sm:px-6 lg:px-8 mb-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="stats-card p-5 card-hover slide-in-up" style={{animationDelay: '0.1s'}}>
-                <div className="flex items-center justify-between mb-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center shadow-lg">
-                    <i className="fas fa-calendar-day text-white text-lg"></i>
-                  </div>
-                  <div className="text-right">
-                    <div className="w-12 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                      <div className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full transition-all duration-1000" style={{width: `${Math.min((todayTasks.length / Math.max(stats?.total || 1, 1)) * 100, 100)}%`}}></div>
+          <div className="px-4 sm:px-6 lg:px-8 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="stats-card p-4">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                      <i className="fas fa-calendar-day text-primary"></i>
                     </div>
                   </div>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground mb-1">Today's Tasks</p>
-                  <p className="text-2xl font-bold text-foreground number-counter" data-testid="stat-today-total">
-                    {todayTasks.length}
-                  </p>
+                  <div className="ml-4 flex-1">
+                    <p className="text-sm font-medium text-muted-foreground">Today's Tasks</p>
+                    <p className="text-2xl font-bold text-foreground" data-testid="stat-today-total">
+                      {todayTasks.length}
+                    </p>
+                  </div>
                 </div>
               </div>
               
-              <div className="stats-card p-5 card-hover slide-in-up" style={{animationDelay: '0.2s'}}>
-                <div className="flex items-center justify-between mb-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl flex items-center justify-center shadow-lg">
-                    <i className="fas fa-check-circle text-white text-lg"></i>
-                  </div>
-                  <div className="text-right">
-                    <div className="w-12 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                      <div className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-1000" style={{width: `${((stats?.completed || 0) / Math.max(stats?.total || 1, 1)) * 100}%`}}></div>
+              <div className="stats-card p-4">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <div className="w-10 h-10 bg-success/10 rounded-lg flex items-center justify-center">
+                      <i className="fas fa-check-circle text-success"></i>
                     </div>
                   </div>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground mb-1">Completed</p>
-                  <p className="text-2xl font-bold text-foreground number-counter" data-testid="stat-completed">
-                    {stats?.completed || 0}
-                  </p>
+                  <div className="ml-4 flex-1">
+                    <p className="text-sm font-medium text-muted-foreground">Completed</p>
+                    <p className="text-2xl font-bold text-foreground" data-testid="stat-completed">
+                      {stats?.completed || 0}
+                    </p>
+                  </div>
                 </div>
               </div>
               
-              <div className="stats-card p-5 card-hover slide-in-up" style={{animationDelay: '0.3s'}}>
-                <div className="flex items-center justify-between mb-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg">
-                    <i className="fas fa-hourglass-half text-white text-lg"></i>
-                  </div>
-                  <div className="text-right">
-                    <div className="w-12 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                      <div className="h-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-full transition-all duration-1000" style={{width: `${((stats?.pending || 0) / Math.max(stats?.total || 1, 1)) * 100}%`}}></div>
+              <div className="stats-card p-4">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <div className="w-10 h-10 bg-warning/10 rounded-lg flex items-center justify-center">
+                      <i className="fas fa-hourglass-half text-warning"></i>
                     </div>
                   </div>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground mb-1">Pending</p>
-                  <p className="text-2xl font-bold text-foreground number-counter" data-testid="stat-pending">
-                    {stats?.pending || 0}
-                  </p>
+                  <div className="ml-4 flex-1">
+                    <p className="text-sm font-medium text-muted-foreground">Pending</p>
+                    <p className="text-2xl font-bold text-foreground" data-testid="stat-pending">
+                      {stats?.pending || 0}
+                    </p>
+                  </div>
                 </div>
               </div>
               
-              <div className="stats-card p-5 card-hover slide-in-up" style={{animationDelay: '0.4s'}}>
-                <div className="flex items-center justify-between mb-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg">
-                    <i className="fas fa-chart-line text-white text-lg"></i>
-                  </div>
-                  <div className="text-right">
-                    <div className="w-12 h-12 relative">
-                      <svg className="w-12 h-12 transform -rotate-90" viewBox="0 0 48 48">
-                        <circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" strokeWidth="3" className="text-gray-200 dark:text-gray-700" />
-                        <circle cx="24" cy="24" r="20" fill="none" stroke="url(#gradient-progress)" strokeWidth="3" strokeLinecap="round" strokeDasharray={`${((stats?.completionRate || 0) / 100) * 125.664} 125.664`} className="transition-all duration-1000" />
-                        <defs>
-                          <linearGradient id="gradient-progress" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stopColor="#a855f7" />
-                            <stop offset="100%" stopColor="#ec4899" />
-                          </linearGradient>
-                        </defs>
-                      </svg>
+              <div className="stats-card p-4">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                      <i className="fas fa-chart-line text-primary"></i>
                     </div>
                   </div>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground mb-1">Progress</p>
-                  <p className="text-2xl font-bold text-foreground number-counter" data-testid="stat-completion-rate">
-                    {stats?.completionRate || 0}%
-                  </p>
+                  <div className="ml-4 flex-1">
+                    <p className="text-sm font-medium text-muted-foreground">Progress</p>
+                    <p className="text-2xl font-bold text-foreground" data-testid="stat-completion-rate">
+                      {stats?.completionRate || 0}%
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -255,30 +219,28 @@ export default function Dashboard() {
               
               <div className="p-6">
                 {todayTasks.length === 0 ? (
-                  <div className="text-center py-12">
-                    <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-emerald-500 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg pulse-animation">
-                      <i className="fas fa-trophy text-2xl text-white"></i>
+                  <div className="text-center py-8">
+                    <div className="w-16 h-16 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <i className="fas fa-trophy text-success text-xl"></i>
                     </div>
-                    <h3 className="text-xl font-semibold text-foreground mb-3">
-                      🎉 All caught up!
+                    <h3 className="text-lg font-semibold text-foreground mb-2">
+                      All caught up!
                     </h3>
-                    <p className="text-muted-foreground mb-6">
-                      No tasks for today. Time to celebrate your productivity!
+                    <p className="text-muted-foreground mb-4">
+                      No tasks for today. Great job staying on top of things!
                     </p>
-                    <button 
+                    <Button 
                       onClick={() => setLocation("/add-task")}
-                      className="btn-gradient px-6 py-3 rounded-xl font-semibold"
+                      variant="outline"
                     >
                       <i className="fas fa-plus mr-2"></i>
-                      Plan ahead
-                    </button>
+                      Add tomorrow's tasks
+                    </Button>
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {todayTasks.map((task: Task, index: number) => (
-                      <div key={task.id} className="slide-in-up" style={{animationDelay: `${0.1 * index}s`}}>
-                        <TaskCard task={task} />
-                      </div>
+                    {todayTasks.map((task: Task) => (
+                      <TaskCard key={task.id} task={task} />
                     ))}
                   </div>
                 )}
