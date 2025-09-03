@@ -1,6 +1,6 @@
-import { type User, type InsertUser, type Task, type InsertTask } from "@shared/schema";
-import { connectToMongoDB } from "./mongodb";
-import { ObjectId } from "mongodb";
+import { users, tasks, type User, type InsertUser, type Task, type InsertTask } from "@shared/schema";
+import { db } from "./db";
+import { eq, and, gte, lt, lte, desc } from "drizzle-orm";
 
 export interface IStorage {
   // User methods
@@ -25,167 +25,114 @@ export interface IStorage {
   }>;
 }
 
-export class MongoStorage implements IStorage {
+export class DatabaseStorage implements IStorage {
   async getUser(id: string): Promise<User | undefined> {
-    const db = await connectToMongoDB();
-    const user = await db.collection('users').findOne({ id });
-    if (!user) return undefined;
-    const { _id, ...userData } = user;
-    return userData as User;
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {
-    const db = await connectToMongoDB();
-    const user = await db.collection('users').findOne({ email });
-    if (!user) return undefined;
-    const { _id, ...userData } = user;
-    return userData as User;
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user || undefined;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const db = await connectToMongoDB();
-    const id = new ObjectId().toString();
-    const user: User = {
-      ...insertUser,
-      id,
-      createdAt: new Date(),
-    };
-    await db.collection('users').insertOne(user);
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
     return user;
   }
 
   async getTask(id: string): Promise<Task | undefined> {
-    const db = await connectToMongoDB();
-    const task = await db.collection('tasks').findOne({ id });
-    if (!task) return undefined;
-    const { _id, ...taskData } = task;
-    return taskData as Task;
+    const [task] = await db.select().from(tasks).where(eq(tasks.id, id));
+    return task || undefined;
   }
 
   async getTasksByUserId(userId: string): Promise<Task[]> {
-    const db = await connectToMongoDB();
-    const tasks = await db.collection('tasks')
-      .find({ userId })
-      .sort({ createdAt: -1 })
-      .toArray();
-    return tasks.map(task => {
-      const { _id, ...taskData } = task;
-      return taskData as Task;
-    });
+    return await db.select().from(tasks).where(eq(tasks.userId, userId)).orderBy(desc(tasks.createdAt));
   }
 
   async getTasksByUserIdAndDate(userId: string, date: string): Promise<Task[]> {
-    const db = await connectToMongoDB();
     const targetDate = new Date(date);
     const startOfDay = new Date(targetDate);
     startOfDay.setHours(0, 0, 0, 0);
     const endOfDay = new Date(targetDate);
     endOfDay.setHours(23, 59, 59, 999);
 
-    const tasks = await db.collection('tasks')
-      .find({
-        userId,
-        dueDate: {
-          $gte: startOfDay,
-          $lte: endOfDay
-        }
-      })
-      .toArray();
-    return tasks.map(task => {
-      const { _id, ...taskData } = task;
-      return taskData as Task;
-    });
+    return await db.select().from(tasks).where(
+      and(
+        eq(tasks.userId, userId),
+        gte(tasks.dueDate, startOfDay),
+        lte(tasks.dueDate, endOfDay)
+      )
+    );
   }
 
   async getTodayTasksByUserId(userId: string): Promise<Task[]> {
-    const db = await connectToMongoDB();
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    const tasks = await db.collection('tasks')
-      .find({
-        userId,
-        $or: [
-          { isOverallTask: true },
-          {
-            dueDate: {
-              $gte: today,
-              $lt: tomorrow
-            }
-          }
-        ]
-      })
-      .toArray();
-    return tasks.map(task => {
-      const { _id, ...taskData } = task;
-      return taskData as Task;
-    });
+    // Get all tasks for the user
+    const allUserTasks = await db.select().from(tasks).where(eq(tasks.userId, userId));
+    
+    // Filter for today's tasks (overall tasks OR tasks due today)
+    return allUserTasks.filter(task => 
+      task.isOverallTask || 
+      (task.dueDate && 
+       new Date(task.dueDate) >= today && 
+       new Date(task.dueDate) < tomorrow)
+    );
   }
 
   async getUpcomingTasksByUserId(userId: string, days: number): Promise<Task[]> {
-    const db = await connectToMongoDB();
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const futureDate = new Date(today);
     futureDate.setDate(futureDate.getDate() + days);
 
-    const tasks = await db.collection('tasks')
-      .find({
-        userId,
-        isOverallTask: false,
-        dueDate: {
-          $gte: today,
-          $lte: futureDate
-        }
-      })
-      .sort({ dueDate: 1 })
-      .toArray();
-    return tasks.map(task => {
-      const { _id, ...taskData } = task;
-      return taskData as Task;
-    });
+    const allTasks = await db.select().from(tasks).where(
+      and(
+        eq(tasks.userId, userId),
+        eq(tasks.isOverallTask, false),
+        gte(tasks.dueDate, today),
+        lte(tasks.dueDate, futureDate)
+      )
+    ).orderBy(tasks.dueDate);
+
+    return allTasks;
   }
 
   async createTask(taskData: InsertTask & { userId: string }): Promise<Task> {
-    const db = await connectToMongoDB();
-    const id = new ObjectId().toString();
-    const task: Task = {
-      ...taskData,
-      description: taskData.description || null,
-      dueDate: taskData.dueDate || null,
-      dueTime: taskData.dueTime || null,
-      id,
-      priority: taskData.priority || "medium",
-      category: taskData.category || "assignment",
-      completionStatus: taskData.completionStatus || "pending",
-      isOverallTask: taskData.isOverallTask || false,
-      emailReminder: taskData.emailReminder || false,
-      pushReminder: taskData.pushReminder || false,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    await db.collection('tasks').insertOne(task);
+    const [task] = await db
+      .insert(tasks)
+      .values({
+        ...taskData,
+        priority: taskData.priority || "medium",
+        category: taskData.category || "assignment",
+        completionStatus: taskData.completionStatus || "pending",
+        isOverallTask: taskData.isOverallTask || false,
+        emailReminder: taskData.emailReminder || false,
+        pushReminder: taskData.pushReminder || false,
+      })
+      .returning();
     return task;
   }
 
   async updateTask(id: string, updates: Partial<Task>): Promise<Task | undefined> {
-    const db = await connectToMongoDB();
-    const result = await db.collection('tasks').findOneAndUpdate(
-      { id },
-      { $set: { ...updates, updatedAt: new Date() } },
-      { returnDocument: 'after' }
-    );
-    if (!result) return undefined;
-    const { _id, ...taskData } = result;
-    return taskData as Task;
+    const [task] = await db
+      .update(tasks)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(tasks.id, id))
+      .returning();
+    return task || undefined;
   }
 
   async deleteTask(id: string): Promise<boolean> {
-    const db = await connectToMongoDB();
-    const result = await db.collection('tasks').deleteOne({ id });
-    return result.deletedCount > 0;
+    const result = await db.delete(tasks).where(eq(tasks.id, id));
+    return (result.rowCount || 0) > 0;
   }
 
   async getTaskStats(userId: string): Promise<{
@@ -204,4 +151,4 @@ export class MongoStorage implements IStorage {
   }
 }
 
-export const storage = new MongoStorage();
+export const storage = new DatabaseStorage();
