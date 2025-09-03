@@ -96,24 +96,28 @@
 /* Animation for days with tasks */
 .has-task-indicators {
   position: relative;
-  animation: taskPulse 2s ease-in-out infinite;
+  animation: taskPulse 1.5s ease-in-out infinite, taskGlow 3s ease-in-out infinite alternate;
+  border: 2px solid hsl(var(--primary) / 0.3);
+  background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--primary) / 0.05));
 }
 
 .has-task-indicators::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(45deg, hsl(var(--primary) / 0.1), hsl(var(--success) / 0.1));
-  border-radius: 4px;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, hsl(var(--primary) / 0.2), hsl(var(--success) / 0.2), hsl(var(--warning) / 0.2));
+  border-radius: 6px;
   pointer-events: none;
-  z-index: 0;
+  z-index: -1;
+  animation: borderRotate 4s linear infinite;
 }
 
-.has-task-indicators:hover::before {
-  background: linear-gradient(45deg, hsl(var(--primary) / 0.2), hsl(var(--success) / 0.2));
+.has-task-indicators:hover {
+  animation: taskPulse 0.8s ease-in-out infinite, taskGlow 1.5s ease-in-out infinite alternate;
+  transform: scale(1.02);
 }
 
 .has-task-indicators > * {
@@ -121,20 +125,47 @@
   z-index: 1;
 }
 
-/* Subtle pulsing animation */
+/* Pulsing animation */
 @keyframes taskPulse {
   0%, 100% {
-    box-shadow: 0 0 0 0 hsl(var(--primary) / 0.3);
+    box-shadow: 0 0 8px hsl(var(--primary) / 0.4);
   }
   50% {
-    box-shadow: 0 0 0 4px hsl(var(--primary) / 0.1);
+    box-shadow: 0 0 16px hsl(var(--primary) / 0.6), 0 0 24px hsl(var(--primary) / 0.3);
+  }
+}
+
+/* Glow animation */
+@keyframes taskGlow {
+  from {
+    filter: brightness(1);
+  }
+  to {
+    filter: brightness(1.1);
+  }
+}
+
+/* Rotating border animation */
+@keyframes borderRotate {
+  0% {
+    background: linear-gradient(45deg, hsl(var(--primary) / 0.3), hsl(var(--success) / 0.3), hsl(var(--warning) / 0.3));
+  }
+  33% {
+    background: linear-gradient(45deg, hsl(var(--success) / 0.3), hsl(var(--warning) / 0.3), hsl(var(--primary) / 0.3));
+  }
+  66% {
+    background: linear-gradient(45deg, hsl(var(--warning) / 0.3), hsl(var(--primary) / 0.3), hsl(var(--success) / 0.3));
+  }
+  100% {
+    background: linear-gradient(45deg, hsl(var(--primary) / 0.3), hsl(var(--success) / 0.3), hsl(var(--warning) / 0.3));
   }
 }
 
 /* Enhanced glow for selected days with tasks */
 .has-task-indicators.bg-primary {
   animation: none;
-  box-shadow: 0 0 12px hsl(var(--primary) / 0.4);
+  box-shadow: 0 0 20px hsl(var(--primary) / 0.6);
+  border: 2px solid hsl(var(--primary));
 }
 
 .has-tasks {
