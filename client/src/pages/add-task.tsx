@@ -156,7 +156,7 @@ export default function AddTask() {
                         type="date"
                         {...form.register("dueDate")}
                         min={new Date().toISOString().split('T')[0]}
-                        max={new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
+                        max={new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
                         data-testid="input-due-date"
                       />
                     </div>
