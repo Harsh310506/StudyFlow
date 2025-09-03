@@ -86,10 +86,55 @@
 
 .calendar-day {
   transition: all 0.2s ease-in-out;
+  position: relative;
 }
 
 .calendar-day:hover {
   background-color: hsl(var(--accent));
+}
+
+/* Animation for days with tasks */
+.has-task-indicators {
+  position: relative;
+  animation: taskPulse 2s ease-in-out infinite;
+}
+
+.has-task-indicators::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, hsl(var(--primary) / 0.1), hsl(var(--success) / 0.1));
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.has-task-indicators:hover::before {
+  background: linear-gradient(45deg, hsl(var(--primary) / 0.2), hsl(var(--success) / 0.2));
+}
+
+.has-task-indicators > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Subtle pulsing animation */
+@keyframes taskPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 hsl(var(--primary) / 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 4px hsl(var(--primary) / 0.1);
+  }
+}
+
+/* Enhanced glow for selected days with tasks */
+.has-task-indicators.bg-primary {
+  animation: none;
+  box-shadow: 0 0 12px hsl(var(--primary) / 0.4);
 }
 
 .has-tasks {
