@@ -21,11 +21,15 @@ export default function Calendar() {
   });
 
   const { data: selectedDateTasks = [] } = useQuery({
-    queryKey: ["/api/tasks/date", selectedDate?.toISOString().split('T')[0]],
+    queryKey: ["/api/tasks/date", selectedDate ? 
+      `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}` 
+      : null],
     enabled: !!selectedDate,
     queryFn: async () => {
       if (!selectedDate) return [];
-      const response = await fetch(`/api/tasks/date/${selectedDate.toISOString().split('T')[0]}`, {
+      // Use local date formatting instead of toISOString() to avoid timezone issues
+      const dateString = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
+      const response = await fetch(`/api/tasks/date/${dateString}`, {
         headers: getAuthHeaders(),
       });
       return response.json();
@@ -53,9 +57,17 @@ export default function Calendar() {
   };
 
   const getTasksForDate = (date: Date) => {
-    return allTasks.filter((task: Task) => 
-      task.dueDate && new Date(task.dueDate).toDateString() === date.toDateString()
-    );
+    return allTasks.filter((task: Task) => {
+      if (!task.dueDate) return false;
+      
+      // Parse the task date and extract date components
+      const taskDate = new Date(task.dueDate);
+      
+      // Compare year, month, and day directly to avoid timezone issues
+      return taskDate.getFullYear() === date.getFullYear() &&
+             taskDate.getMonth() === date.getMonth() &&
+             taskDate.getDate() === date.getDate();
+    });
   };
 
   const previousMonth = () => {
@@ -74,24 +86,23 @@ export default function Calendar() {
   const today = new Date();
 
   return (
-    <div className="flex h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground">
       <Sidebar />
+      <MobileHeader />
       
-      <div className="lg:pl-64 flex flex-col flex-1">
-        <MobileHeader />
-        
-        <main className="flex-1 overflow-y-auto bg-background">
+      <div className="lg:pl-64">
+        <main className="min-h-screen bg-background">
           <div className="px-4 sm:px-6 lg:px-8 py-6">
             <div className="mb-6">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                   <h1 className="text-2xl font-bold text-foreground flex items-center">
                     <i className="fas fa-calendar text-primary mr-3"></i>
                     Calendar View
                   </h1>
-                  <p className="mt-1 text-sm text-muted-foreground">Track your tasks across dates with visual indicators</p>
+                  <p className="mt-1 text-sm text-muted-foreground">Track your tasks across dates</p>
                 </div>
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2 sm:space-x-4">
                   <Button 
                     variant="outline" 
                     size="sm"
@@ -101,7 +112,7 @@ export default function Calendar() {
                   >
                     <i className="fas fa-chevron-left"></i>
                   </Button>
-                  <h2 className="text-lg font-semibold text-foreground min-w-[200px] text-center" data-testid="text-current-month">
+                  <h2 className="text-lg font-semibold text-foreground min-w-[180px] sm:min-w-[200px] text-center" data-testid="text-current-month">
                     {formatMonth(currentDate)}
                   </h2>
                   <Button 
@@ -122,8 +133,9 @@ export default function Calendar() {
               {/* Calendar Header */}
               <div className="grid grid-cols-7 bg-muted">
                 {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-                  <div key={day} className="px-3 py-4 text-center text-sm font-medium text-muted-foreground">
-                    {day}
+                  <div key={day} className="px-2 sm:px-3 py-3 sm:py-4 text-center text-xs sm:text-sm font-medium text-muted-foreground">
+                    <span className="hidden sm:inline">{day}</span>
+                    <span className="sm:hidden">{day.charAt(0)}</span>
                   </div>
                 ))}
               </div>
@@ -140,34 +152,44 @@ export default function Calendar() {
                     <div 
                       key={index}
                       onClick={() => setSelectedDate(day)}
-                      className={`calendar-day h-24 p-2 border-b border-border cursor-pointer transition-colors ${
+                      className={`calendar-day h-16 sm:h-20 lg:h-24 p-1 sm:p-2 border-b border-border cursor-pointer transition-colors relative ${
                         !isCurrentMonth ? 'bg-muted/30' : 
                         isSelected ? 'bg-primary text-primary-foreground' :
                         isToday ? 'bg-accent' : 'hover:bg-accent'
-                      } ${tasksForDay.length > 0 ? 'has-task-indicators' : ''}`}
+                      } ${tasksForDay.length > 0 && isCurrentMonth ? 'has-task-indicators' : ''}`}
                       data-testid={`calendar-day-${day.toISOString().split('T')[0]}`}
                     >
-                      <span className={`text-sm ${isCurrentMonth ? 'text-foreground' : 'text-muted-foreground'} ${
-                        isSelected || (tasksForDay.length > 0 && isCurrentMonth) ? 'font-medium' : ''
-                      }`}>
-                        {day.getDate()}
-                      </span>
+                      <div className="flex justify-between items-start h-full">
+                        <span className={`text-xs sm:text-sm ${isCurrentMonth ? 'text-foreground' : 'text-muted-foreground'} ${
+                          isSelected || (tasksForDay.length > 0 && isCurrentMonth) ? 'font-medium' : ''
+                        }`}>
+                          {day.getDate()}
+                        </span>
+                        
+                        {/* Simple task count indicator */}
+                        {tasksForDay.length > 0 && isCurrentMonth && (
+                          <div className="text-xs bg-primary text-primary-foreground rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center font-medium">
+                            {tasksForDay.length}
+                          </div>
+                        )}
+                      </div>
                       
+                      {/* Task priority bars - hidden on very small screens */}
                       {tasksForDay.length > 0 && isCurrentMonth && (
-                        <div className="mt-2 space-y-1">
-                          {tasksForDay.slice(0, 3).map((task: Task, taskIndex: number) => (
+                        <div className="hidden sm:block mt-1 space-y-1">
+                          {tasksForDay.slice(0, 2).map((task: Task, taskIndex: number) => (
                             <div 
                               key={task.id}
-                              className={`task-indicator-bar w-full h-1.5 rounded-full ${
+                              className={`task-indicator-bar w-full h-1 rounded-full ${
                                 task.priority === 'high' ? 'bg-destructive' :
                                 task.priority === 'medium' ? 'bg-warning' : 'bg-success'
                               }`}
                               style={{animationDelay: `${taskIndex * 0.1}s`}}
                             />
                           ))}
-                          {tasksForDay.length > 3 && (
-                            <div className="text-xs text-center text-muted-foreground font-medium mt-1">
-                              +{tasksForDay.length - 3} more
+                          {tasksForDay.length > 2 && (
+                            <div className="text-xs text-center text-muted-foreground font-medium">
+                              +{tasksForDay.length - 2} more
                             </div>
                           )}
                         </div>
@@ -205,16 +227,16 @@ export default function Calendar() {
                     <div className="space-y-4">
                       {selectedDateTasks.map((task: Task, index: number) => (
                         <div key={task.id} className={`stats-card card-hover p-4 fade-in`} style={{animationDelay: `${index * 0.1}s`}}>
-                          <div className="flex items-center justify-between">
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                             <div className="flex items-center space-x-4">
-                              <div className={`w-3 h-3 rounded-full ${
+                              <div className={`w-3 h-3 rounded-full flex-shrink-0 ${
                                 task.priority === 'high' ? 'bg-destructive' : 
                                 task.priority === 'medium' ? 'bg-warning' : 'bg-success'
                               }`}></div>
-                              <div className="flex-1">
-                                <h4 className="text-sm font-semibold text-foreground">{task.title}</h4>
+                              <div className="flex-1 min-w-0">
+                                <h4 className="text-sm font-semibold text-foreground truncate">{task.title}</h4>
                                 {task.description && (
-                                  <p className="text-xs text-muted-foreground mt-1">{task.description}</p>
+                                  <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{task.description}</p>
                                 )}
                                 {task.dueTime && (
                                   <p className="text-xs text-muted-foreground mt-1">
@@ -227,7 +249,7 @@ export default function Calendar() {
                                 )}
                               </div>
                             </div>
-                            <div className="flex items-center space-x-2">
+                            <div className="flex items-center gap-2 flex-wrap">
                               <span className={`text-xs px-2 py-1 rounded-md ${
                                 task.priority === 'high' ? 'bg-destructive/10 text-destructive' :
                                 task.priority === 'medium' ? 'bg-warning/10 text-warning' : 'bg-success/10 text-success'

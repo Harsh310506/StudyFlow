@@ -53,14 +53,14 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
-      <div className="bg-card rounded-lg border border-border w-full max-w-md p-6">
-        <div className="text-center mb-6">
-          <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mx-auto mb-4">
-            <i className="fas fa-graduation-cap text-primary-foreground text-lg"></i>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-900 dark:to-slate-800 px-4">
+      <div className="bg-card/80 backdrop-blur-sm rounded-2xl border border-border shadow-2xl w-full max-w-md p-8">
+        <div className="text-center mb-8">
+          <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+            <i className="fas fa-bullseye text-white text-2xl"></i>
           </div>
-          <h2 className="text-xl font-bold text-foreground">Welcome to StudyFlow</h2>
-          <p className="text-sm text-muted-foreground mt-1">Sign in to manage your tasks</p>
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">Welcome to Focusly</h2>
+          <p className="text-sm text-muted-foreground">Focus. Achieve. Succeed.</p>
         </div>
         
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

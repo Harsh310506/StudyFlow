@@ -173,8 +173,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Convert empty strings to null for optional fields
         description: req.body.description || null,
         dueTime: req.body.dueTime || null,
-        // Handle dueDate conversion - if it's already a Date object, keep it, otherwise convert
-        dueDate: req.body.dueDate ? (req.body.dueDate instanceof Date ? req.body.dueDate : new Date(req.body.dueDate)) : null,
+        // Handle dueDate conversion - ensure consistent timezone handling
+        dueDate: req.body.dueDate ? (() => {
+          if (req.body.dueDate instanceof Date) {
+            return req.body.dueDate;
+          }
+          // If it's a date string, parse it carefully to avoid timezone issues
+          const dateValue = new Date(req.body.dueDate);
+          // Ensure the date is interpreted in local timezone by setting time to noon
+          const localDate = new Date(dateValue.getFullYear(), dateValue.getMonth(), dateValue.getDate(), 12, 0, 0, 0);
+          return localDate;
+        })() : null,
         // Ensure boolean fields are properly converted
         isOverallTask: Boolean(req.body.isOverallTask),
         emailReminder: Boolean(req.body.emailReminder),

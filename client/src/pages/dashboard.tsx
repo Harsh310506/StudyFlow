@@ -98,29 +98,28 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="flex h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground">
       <Sidebar />
+      <MobileHeader />
       
-      <div className="lg:pl-64 flex flex-col flex-1">
-        <MobileHeader />
-        
-        <main className="flex-1 overflow-y-auto bg-background">
+      <div className="lg:pl-64">
+        <main className="min-h-screen bg-background">
           {/* Header Section */}
           <div className="px-4 sm:px-6 lg:px-8 py-6">
-            <div className="bg-card rounded-lg border border-border p-6">
-              <div className="flex items-center justify-between">
+            <div className="bg-card rounded-lg border border-border p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                  <h1 className="text-2xl font-bold text-foreground" data-testid="text-greeting">
+                  <h1 className="text-xl sm:text-2xl font-bold text-foreground" data-testid="text-greeting">
                     {getGreeting()}, {user?.firstName || "Student"}!
                   </h1>
-                  <p className="mt-1 text-muted-foreground" data-testid="text-today-date">
+                  <p className="mt-1 text-sm text-muted-foreground" data-testid="text-today-date">
                     Today is {formatDate(new Date())}
                   </p>
                 </div>
                 <Button 
                   onClick={() => setLocation("/add-task")}
                   data-testid="button-add-task"
-                  className="bg-primary hover:bg-primary/90"
+                  className="bg-primary hover:bg-primary/90 w-full sm:w-auto"
                 >
                   <i className="fas fa-plus mr-2"></i>
                   Add Task

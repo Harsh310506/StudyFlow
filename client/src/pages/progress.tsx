@@ -68,25 +68,25 @@ export default function Progress() {
   const recentActivity = getRecentActivity();
 
   return (
-    <div className="flex h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground lg:flex">
       <Sidebar />
       
       <div className="lg:pl-64 flex flex-col flex-1">
         <MobileHeader />
         
-        <main className="flex-1 overflow-y-auto bg-background">
-          <div className="px-4 sm:px-6 lg:px-8 py-6">
+        <main className="flex-1 bg-background p-4 sm:p-6 lg:p-8">
+          <div className="max-w-7xl mx-auto">
             <div className="mb-6">
-              <h1 className="text-2xl font-bold text-foreground">Progress & Statistics</h1>
-              <p className="mt-1 text-sm text-muted-foreground">Track your productivity and task completion rates</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Progress & Statistics</h1>
+              <p className="mt-1 text-sm sm:text-base text-muted-foreground">Track your productivity and task completion rates</p>
             </div>
             
             {/* Overview Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <div className="bg-card rounded-lg border border-border p-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+              <div className="bg-card rounded-lg border border-border p-4 sm:p-6">
                 <div className="flex items-center">
-                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <i className="fas fa-tasks text-primary"></i>
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <i className="fas fa-tasks text-primary text-sm sm:text-base"></i>
                   </div>
                   <div className="ml-4">
                     <p className="text-sm font-medium text-muted-foreground">Total Tasks</p>

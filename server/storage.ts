@@ -72,11 +72,11 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getTasksByUserIdAndDate(userId: string, date: string): Promise<Task[]> {
-    const targetDate = new Date(date);
-    const startOfDay = new Date(targetDate);
-    startOfDay.setHours(0, 0, 0, 0);
-    const endOfDay = new Date(targetDate);
-    endOfDay.setHours(23, 59, 59, 999);
+    // Parse the date string as UTC to avoid timezone issues
+    // Expecting date in YYYY-MM-DD format
+    const [year, month, day] = date.split('-').map(Number);
+    const startOfDay = new Date(year, month - 1, day, 0, 0, 0, 0);
+    const endOfDay = new Date(year, month - 1, day, 23, 59, 59, 999);
 
     return await db.select().from(tasks).where(
       and(
@@ -89,9 +89,8 @@ export class DatabaseStorage implements IStorage {
 
   async getTodayTasksByUserId(userId: string): Promise<Task[]> {
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
+    const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0, 0);
+    const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59, 999);
 
     // Get all tasks for the user
     const allUserTasks = await db.select().from(tasks).where(eq(tasks.userId, userId));
@@ -100,8 +99,8 @@ export class DatabaseStorage implements IStorage {
     return allUserTasks.filter(task => 
       task.isOverallTask || 
       (task.dueDate && 
-       new Date(task.dueDate) >= today && 
-       new Date(task.dueDate) < tomorrow)
+       new Date(task.dueDate) >= startOfDay && 
+       new Date(task.dueDate) <= endOfDay)
     );
   }
 

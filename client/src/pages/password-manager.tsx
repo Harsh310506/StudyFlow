@@ -179,22 +179,22 @@ export default function PasswordManager() {
   }
 
   return (
-    <div className="flex h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground lg:flex">
       <Sidebar />
       
       <div className="lg:pl-64 flex flex-col flex-1">
         <MobileHeader />
         
-        <main className="flex-1 overflow-y-auto bg-background">
-          <div className="px-4 sm:px-6 lg:px-8 py-6">
+        <main className="flex-1 bg-background p-4 sm:p-6 lg:p-8">
+          <div className="max-w-7xl mx-auto">
             <div className="mb-6">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                  <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-                    <Shield className="w-6 h-6 text-primary" />
+                  <h1 className="text-2xl sm:text-3xl font-bold text-foreground flex items-center gap-2">
+                    <i className="fas fa-shield-alt text-primary"></i>
                     Password Manager
                   </h1>
-                  <p className="mt-1 text-sm text-muted-foreground">
+                  <p className="mt-1 text-sm sm:text-base text-muted-foreground">
                     Securely store and manage your passwords
                   </p>
                 </div>

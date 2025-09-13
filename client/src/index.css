@@ -1,326 +1,701 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 :root {
-  --background: hsl(0, 0%, 100%);
-  --foreground: hsl(222.2, 84%, 4.9%);
-  --card: hsl(0, 0%, 100%);
-  --card-foreground: hsl(222.2, 84%, 4.9%);
-  --popover: hsl(0, 0%, 100%);
-  --popover-foreground: hsl(222.2, 84%, 4.9%);
-  --primary: hsl(221.2, 83.2%, 53.3%);
-  --primary-foreground: hsl(210, 40%, 98%);
-  --secondary: hsl(210, 40%, 96%);
-  --secondary-foreground: hsl(222.2, 84%, 4.9%);
-  --muted: hsl(210, 40%, 96%);
-  --muted-foreground: hsl(215.4, 16.3%, 46.9%);
-  --accent: hsl(210, 40%, 96%);
-  --accent-foreground: hsl(222.2, 84%, 4.9%);
-  --destructive: hsl(0, 84.2%, 60.2%);
-  --destructive-foreground: hsl(210, 40%, 98%);
-  --border: hsl(214.3, 31.8%, 91.4%);
-  --input: hsl(214.3, 31.8%, 91.4%);
-  --ring: hsl(221.2, 83.2%, 53.3%);
-  --success: hsl(142.1, 76.2%, 36.3%);
-  --warning: hsl(45.4, 93.4%, 47.5%);
-  --radius: 0.5rem;
-  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    /* Focusly - Calm and focused color scheme */
+    --background: hsl(210, 40%, 98%);
+    --foreground: hsl(215, 25%, 27%);
+    --card: hsl(0, 0%, 100%);
+    --card-foreground: hsl(215, 25%, 27%);
+    --popover: hsl(0, 0%, 100%);
+    --popover-foreground: hsl(215, 25%, 27%);
+    --primary: hsl(217, 91%, 60%);
+    --primary-foreground: hsl(0, 0%, 98%);
+    --secondary: hsl(210, 40%, 96%);
+    --secondary-foreground: hsl(215, 25%, 27%);
+    --muted: hsl(210, 40%, 96%);
+    --muted-foreground: hsl(215, 16%, 47%);
+    --accent: hsl(217, 91%, 95%);
+    --accent-foreground: hsl(217, 91%, 60%);
+    --destructive: hsl(0, 70%, 50%);
+    --destructive-foreground: hsl(0, 0%, 98%);
+    --border: hsl(217, 32%, 91%);
+    --input: hsl(217, 32%, 91%);
+    --ring: hsl(217, 91%, 60%);
+    --success: hsl(142, 76%, 36%);
+    --warning: hsl(38, 92%, 50%);
+    --info: hsl(217, 91%, 60%);
+    --focus-primary: hsl(217, 91%, 60%);
+    --focus-secondary: hsl(224, 76%, 48%);
+    --focus-accent: hsl(217, 91%, 95%);
+    --radius: 0.5rem;
+    --font-sans: 'Inter', 'Poppins', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    --shadow-sm: 0 1px 2px 0 rgba(59, 130, 246, 0.05);
+    --shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.1), 0 2px 4px -1px rgba(59, 130, 246, 0.06);
+    --shadow-md: 0 6px 15px -3px rgba(59, 130, 246, 0.1), 0 4px 6px -2px rgba(59, 130, 246, 0.05);
+    --shadow-lg: 0 10px 25px -5px rgba(59, 130, 246, 0.1), 0 10px 10px -5px rgba(59, 130, 246, 0.04);
+    --shadow-xl: 0 20px 50px -12px rgba(59, 130, 246, 0.25);
 }
 
 .dark {
-  --background: hsl(222.2, 84%, 4.9%);
-  --foreground: hsl(210, 40%, 98%);
-  --card: hsl(222.2, 84%, 4.9%);
-  --card-foreground: hsl(210, 40%, 98%);
-  --popover: hsl(222.2, 84%, 4.9%);
-  --popover-foreground: hsl(210, 40%, 98%);
-  --primary: hsl(217.2, 91.2%, 59.8%);
-  --primary-foreground: hsl(222.2, 84%, 4.9%);
-  --secondary: hsl(217.2, 32.6%, 17.5%);
-  --secondary-foreground: hsl(210, 40%, 98%);
-  --muted: hsl(217.2, 32.6%, 17.5%);
-  --muted-foreground: hsl(215, 20.2%, 65.1%);
-  --accent: hsl(217.2, 32.6%, 17.5%);
-  --accent-foreground: hsl(210, 40%, 98%);
-  --destructive: hsl(0, 62.8%, 30.6%);
-  --destructive-foreground: hsl(210, 40%, 98%);
-  --border: hsl(217.2, 32.6%, 17.5%);
-  --input: hsl(217.2, 32.6%, 17.5%);
-  --ring: hsl(224.3, 76.3%, 94.0%);
-  --success: hsl(142.1, 70.6%, 45.3%);
-  --warning: hsl(45.4, 93.4%, 47.5%);
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
-  --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    --background: hsl(224, 71%, 4%);
+    --foreground: hsl(213, 31%, 91%);
+    --card: hsl(224, 71%, 8%);
+    --card-foreground: hsl(213, 31%, 91%);
+    --popover: hsl(224, 71%, 8%);
+    --popover-foreground: hsl(213, 31%, 91%);
+    --primary: hsl(217, 91%, 60%);
+    --primary-foreground: hsl(224, 71%, 4%);
+    --secondary: hsl(224, 71%, 12%);
+    --secondary-foreground: hsl(213, 31%, 91%);
+    --muted: hsl(224, 71%, 12%);
+    --muted-foreground: hsl(217, 10%, 64%);
+    --accent: hsl(224, 71%, 16%);
+    --accent-foreground: hsl(217, 91%, 60%);
+    --destructive: hsl(0, 62%, 45%);
+    --destructive-foreground: hsl(213, 31%, 91%);
+    --border: hsl(224, 71%, 16%);
+    --input: hsl(224, 71%, 16%);
+    --ring: hsl(217, 91%, 60%);
+    --success: hsl(142, 76%, 36%);
+    --warning: hsl(38, 92%, 50%);
+    --info: hsl(217, 91%, 60%);
+    --focus-primary: hsl(217, 91%, 60%);
+    --focus-secondary: hsl(224, 76%, 48%);
+    --focus-accent: hsl(224, 71%, 16%);
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 6px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+    --shadow-xl: 0 20px 50px -12px rgba(0, 0, 0, 0.6);
 }
 
 @layer base {
-  * {
-    @apply border-border;
-    font-family: var(--font-sans);
-  }
-
-  body {
-    @apply font-sans antialiased bg-background text-foreground;
-  }
+    * {
+        @apply border-border;
+        font-family: var(--font-sans);
+    }
+    body {
+        @apply font-sans antialiased bg-background text-foreground;
+        letter-spacing: -0.01em;
+    }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-weight: 600;
+        line-height: 1.2;
+    }
 }
 
 .task-card {
-  transition: all 0.2s ease-in-out;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border-left: 3px solid transparent;
+    backdrop-filter: blur(10px);
 }
 
 .task-card:hover {
-  transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    border-left-color: hsl(var(--focus-primary));
 }
 
+
+/* Focus-oriented design improvements */
+
+.focus-gradient {
+    background: linear-gradient(135deg, hsl(var(--focus-primary)), hsl(var(--focus-secondary)));
+}
+
+.focus-glow {
+    box-shadow: 0 0 20px hsl(var(--focus-primary) / 0.2);
+}
+
+.focus-border {
+    border: 1px solid hsl(var(--focus-primary) / 0.2);
+}
+
+
+/* Enhanced priority indicators with focus theme */
+
 .priority-high {
-  border-left: 4px solid hsl(var(--destructive));
+    border-left-color: hsl(var(--destructive));
+    background: linear-gradient(90deg, hsl(var(--destructive) / 0.05), transparent);
 }
 
 .priority-medium {
-  border-left: 4px solid hsl(var(--warning));
+    border-left-color: hsl(var(--warning));
+    background: linear-gradient(90deg, hsl(var(--warning) / 0.05), transparent);
 }
 
 .priority-low {
-  border-left: 4px solid hsl(var(--success));
+    border-left-color: hsl(var(--success));
+    background: linear-gradient(90deg, hsl(var(--success) / 0.05), transparent);
 }
 
 .calendar-day {
-  transition: all 0.2s ease-in-out;
-  position: relative;
+    transition: all 0.2s ease-in-out;
+    position: relative;
 }
 
 .calendar-day:hover {
-  background-color: hsl(var(--accent));
+    background-color: hsl(var(--accent));
 }
 
-/* Calendar day animations for tasks */
+
+/* Professional calendar styling - simplified */
+
 .has-task-indicators {
-  position: relative;
-  border-left: 3px solid hsl(var(--primary));
-  background: hsl(var(--primary) / 0.02);
+    position: relative;
+    border-left: 2px solid hsl(var(--primary));
+    background: hsl(var(--accent) / 0.3);
 }
 
 .has-task-indicators::after {
-  content: '';
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  width: 8px;
-  height: 8px;
-  background: hsl(var(--primary));
-  border-radius: 50%;
-  animation: taskPulse 2s ease-in-out infinite;
+    content: '';
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 6px;
+    height: 6px;
+    background: hsl(var(--primary));
+    border-radius: 50%;
 }
 
-.has-task-indicators:hover {
-  background: hsl(var(--primary) / 0.05);
-  border-left-color: hsl(var(--primary));
-  transform: translateX(2px);
-}
 
-.has-task-indicators:hover::after {
-  animation: taskPulse 1s ease-in-out infinite;
-}
+/* Professional task indicator bars */
 
-/* Task indicator bars animation */
 .task-indicator-bar {
-  animation: slideIn 0.3s ease-out forwards;
-  opacity: 0;
-  transform: scaleX(0);
-  transform-origin: left;
+    animation: slideIn 0.2s ease-out forwards;
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: left;
 }
 
-.task-indicator-bar:nth-child(1) { animation-delay: 0.1s; }
-.task-indicator-bar:nth-child(2) { animation-delay: 0.2s; }
-.task-indicator-bar:nth-child(3) { animation-delay: 0.3s; }
+.task-indicator-bar:nth-child(1) {
+    animation-delay: 0.05s;
+}
+
+.task-indicator-bar:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.task-indicator-bar:nth-child(3) {
+    animation-delay: 0.15s;
+}
+
+
+/* Simplified keyframe animations */
 
 @keyframes slideIn {
-  to {
-    opacity: 1;
-    transform: scaleX(1);
-  }
+    to {
+        opacity: 1;
+        transform: scaleX(1);
+    }
 }
 
-/* Subtle pulsing animation for task indicator dot */
-@keyframes taskPulse {
-  0%, 100% {
-    opacity: 0.8;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.2);
-  }
-}
 
-/* Calendar day hover effect */
-.calendar-day {
-  transition: all 0.2s ease-in-out;
-}
-
-.calendar-day:hover {
-  background-color: hsl(var(--accent));
-}
-
-.has-tasks {
-  background-color: hsl(var(--primary));
-  color: hsl(var(--primary-foreground));
-}
-
-.completion-full {
-  background-color: hsl(var(--success));
-  color: white;
-}
-
-.completion-half {
-  background-color: hsl(var(--warning));
-  color: white;
-}
-
-.completion-partial {
-  background-color: hsl(var(--muted));
-  color: hsl(var(--muted-foreground));
-}
-
-/* Simplified UI Components */
-.card-hover {
-  transition: all 0.2s ease-in-out;
-  cursor: pointer;
-}
-
-.card-hover:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
-}
-
-.stats-card {
-  background: hsl(var(--card));
-  border-radius: var(--radius);
-  border: 1px solid hsl(var(--border));
-  box-shadow: var(--shadow-sm);
-  transition: all 0.2s ease-in-out;
-}
-
-.stats-card:hover {
-  box-shadow: var(--shadow);
-}
+/* Professional sidebar styling */
 
 .sidebar-item {
-  transition: all 0.2s ease-in-out;
-  position: relative;
+    transition: all 0.15s ease-in-out;
+    position: relative;
 }
 
 .sidebar-item::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 3px;
-  background: hsl(var(--primary));
-  transform: scaleY(0);
-  transition: transform 0.2s ease-in-out;
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 2px;
+    background: hsl(var(--primary));
+    transform: scaleY(0);
+    transition: transform 0.15s ease-in-out;
 }
 
 .sidebar-item.active::before {
-  transform: scaleY(1);
+    transform: scaleY(1);
 }
 
 .sidebar-item:hover {
-  background-color: hsl(var(--accent));
+    background-color: hsl(var(--accent));
 }
 
 
+/* Professional card hover effects */
+
+.card-hover {
+    transition: all 0.15s ease-in-out;
+    cursor: pointer;
+}
+
+.card-hover:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+
+/* Professional stats card */
+
+.stats-card {
+    background: hsl(var(--card));
+    border-radius: var(--radius);
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-sm);
+    transition: all 0.15s ease-in-out;
+}
+
+.stats-card:hover {
+    box-shadow: var(--shadow);
+}
+
+
+/* Professional fade in animation */
+
 .fade-in {
-  animation: fadeIn 0.3s ease-in-out;
+    animation: fadeIn 0.2s ease-in-out;
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
-.shimmer {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-}
 
-.dark .shimmer {
-  background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
-  background-size: 200% 100%;
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
+/* Professional input styling */
 
 .modern-input {
-  border: 2px solid transparent;
-  background: hsl(var(--background));
-  border-radius: var(--radius);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
+    border: 1px solid hsl(var(--border));
+    background: hsl(var(--background));
+    border-radius: var(--radius);
+    transition: all 0.15s ease-in-out;
+    position: relative;
 }
 
 .modern-input:focus {
-  border-color: hsl(var(--primary));
-  box-shadow: 0 0 0 4px hsl(var(--primary) / 0.1);
-  outline: none;
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 0 2px hsl(var(--primary) / 0.1);
+    outline: none;
 }
 
-.number-counter {
-  font-feature-settings: 'tnum';
-  font-variant-numeric: tabular-nums;
-}
 
-/* Progress bars */
+/* Professional progress bars */
+
 .progress-bar {
-  overflow: hidden;
-  border-radius: 9999px;
-  background-color: hsl(var(--muted));
-  position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    background-color: hsl(var(--muted));
+    position: relative;
 }
 
 .progress-bar::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  background: var(--gradient-primary);
-  width: var(--progress, 0%);
-  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background: hsl(var(--primary));
+    width: var(--progress, 0%);
+    transition: width 0.5s ease-in-out;
+}
+
+
+/* Typography improvements */
+
+.number-counter {
+    font-feature-settings: 'tnum';
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+}
+
+
+/* Icon styling for better visibility */
+
+.icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: hsl(var(--muted-foreground));
+}
+
+.icon-primary {
+    color: hsl(var(--primary));
+}
+
+.icon-success {
+    color: hsl(var(--success));
+}
+
+.icon-warning {
+    color: hsl(var(--warning));
+}
+
+.icon-destructive {
+    color: hsl(var(--destructive));
+}
+
+
+/* Glass effect simplified */
+
+.glass-effect {
+    background: hsl(var(--card) / 0.8);
+    backdrop-filter: blur(8px);
+    border: 1px solid hsl(var(--border));
+}
+
+
+/* Remove fancy gradients */
+
+.gradient-text {
+    color: hsl(var(--primary));
+    font-weight: 600;
+}
+
+
+/* Remove complex task indicator dots - use simple static indicators instead */
+
+.task-indicator-dot,
+.task-indicator-dot-secondary,
+.task-indicator-dot-tertiary,
+.task-count-circle,
+.task-count-badge {
+    display: none;
+    /* Hide complex animated elements for professional look */
+}
+
+
+/* Clean, professional animations only */
+
+
+/* Remove complex animations and keyframes */
+
+@keyframes slideInGrow {
+    to {
+        opacity: 1;
+        transform: scaleX(1);
+    }
+}
+
+
+/* Calendar day hover effect */
+
+.calendar-day {
+    transition: all 0.15s ease-in-out;
+}
+
+.calendar-day:hover {
+    background-color: hsl(var(--accent));
+}
+
+.has-tasks {
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+}
+
+.completion-full {
+    background-color: hsl(var(--success));
+    color: white;
+}
+
+.completion-half {
+    background-color: hsl(var(--warning));
+    color: white;
+}
+
+.completion-partial {
+    background-color: hsl(var(--muted));
+    color: hsl(var(--muted-foreground));
+}
+
+
+/* Simplified UI Components */
+
+.card-hover {
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.card-hover:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.stats-card {
+    background: hsl(var(--card));
+    border-radius: var(--radius);
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease-in-out;
+}
+
+.stats-card:hover {
+    box-shadow: var(--shadow);
+}
+
+.sidebar-item {
+    transition: all 0.2s ease-in-out;
+    position: relative;
+}
+
+.sidebar-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 3px;
+    background: hsl(var(--primary));
+    transform: scaleY(0);
+    transition: transform 0.2s ease-in-out;
+}
+
+.sidebar-item.active::before {
+    transform: scaleY(1);
+}
+
+.sidebar-item:hover {
+    background-color: hsl(var(--accent));
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.shimmer {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+.dark .shimmer {
+    background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+    background-size: 200% 100%;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.modern-input {
+    border: 2px solid transparent;
+    background: hsl(var(--background));
+    border-radius: var(--radius);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.modern-input:focus {
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 0 4px hsl(var(--primary) / 0.1);
+    outline: none;
+}
+
+.number-counter {
+    font-feature-settings: 'tnum';
+    font-variant-numeric: tabular-nums;
+}
+
+
+/* Progress bars */
+
+.progress-bar {
+    overflow: hidden;
+    border-radius: 9999px;
+    background-color: hsl(var(--muted));
+    position: relative;
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background: var(--gradient-primary);
+    width: var(--progress, 0%);
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .progress-bar.animated::after {
-  animation: progressFill 2s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: progressFill 2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes progressFill {
-  0% {
-    width: 0%;
-  }
-  100% {
-    width: var(--progress, 0%);
-  }
+    0% {
+        width: 0%;
+    }
+    100% {
+        width: var(--progress, 0%);
+    }
+}
+
+
+/* Responsive utilities */
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+    .container {
+        padding: 0 1.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .container {
+        padding: 0 2rem;
+    }
+}
+
+
+/* Mobile-first responsive design */
+
+.mobile-hidden {
+    display: none;
+}
+
+@media (min-width: 640px) {
+    .mobile-hidden {
+        display: block;
+    }
+}
+
+.mobile-only {
+    display: block;
+}
+
+@media (min-width: 640px) {
+    .mobile-only {
+        display: none;
+    }
+}
+
+
+/* Improved touch targets for mobile */
+
+@media (max-width: 767px) {
+    .calendar-day {
+        min-height: 4rem;
+    }
+    button,
+    .clickable {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    .sidebar-item {
+        padding: 0.875rem 1rem;
+    }
+}
+
+
+/* Better mobile navigation */
+
+.mobile-nav-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 40;
+}
+
+.mobile-nav-panel {
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 320px;
+    max-width: 90vw;
+    background: hsl(var(--card));
+    border-left: 1px solid hsl(var(--border));
+    z-index: 50;
+    overflow-y: auto;
+    transform: translateX(100%);
+    transition: transform 0.2s ease-in-out;
+}
+
+.mobile-nav-panel.open {
+    transform: translateX(0);
+}
+
+
+/* Text truncation and line clamping */
+
+.line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+
+/* Improved accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+
+/* Focus states for better accessibility */
+
+button:focus-visible,
+.clickable:focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+}
+
+
+/* High contrast mode support */
+
+@media (prefers-contrast: high) {
+     :root {
+        --border: hsl(0, 0%, 50%);
+        --muted-foreground: hsl(0, 0%, 30%);
+    }
+    .dark {
+        --border: hsl(0, 0%, 70%);
+        --muted-foreground: hsl(0, 0%, 80%);
+    }
 }
