@@ -5,7 +5,38 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
+// CORS configuration
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://your-frontend-domain.vercel.app'] // Update this with your Vercel domain
+    : ['http://localhost:5173', 'http://127.0.0.1:5173'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
 const app = express();
+
+// Add CORS middleware
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  const allowedOrigins = corsOptions.origin as string[];
+  
+  if (allowedOrigins.includes(origin as string)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', corsOptions.methods.join(', '));
+  res.header('Access-Control-Allow-Headers', corsOptions.allowedHeaders.join(', '));
+  
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -64,10 +95,17 @@ app.use((req, res, next) => {
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
   const port = parseInt(process.env.PORT || '5000', 10);
-  server.listen(port, "127.0.0.1", () => {
+  const host = process.env.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1';
+  
+  server.listen(port, host, () => {
     log(`Server is running!`);
+    log(`Environment: ${process.env.NODE_ENV}`);
     log(`Local: http://localhost:${port}`);
-    log(`Network: http://127.0.0.1:${port}`);
+    if (process.env.NODE_ENV === 'production') {
+      log(`Production server listening on port ${port}`);
+    } else {
+      log(`Network: http://127.0.0.1:${port}`);
+    }
     log(`Ready to accept connections`);
   });
 })();
