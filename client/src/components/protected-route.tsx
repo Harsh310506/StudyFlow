@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAuthToken, getAuthHeaders } from "@/lib/auth";
+import { getAuthToken } from "@/lib/auth";
+import { apiRequest } from "@/lib/queryClient";
 import { useLocation } from "wouter";
 import { useEffect } from "react";
 
@@ -15,12 +16,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
     queryKey: ["/api/auth/me"],
     enabled: !!token,
     queryFn: async () => {
-      const response = await fetch("/api/auth/me", {
-        headers: getAuthHeaders(),
-      });
-      if (!response.ok) {
-        throw new Error("Authentication failed");
-      }
+      const response = await apiRequest("GET", "/api/auth/me");
       return response.json();
     },
   });

@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getAuthHeaders } from "@/lib/auth";
+import { apiRequest } from "@/lib/queryClient";
 import { useLocation } from "wouter";
 import { Sidebar } from "@/components/sidebar";
 import { MobileHeader } from "@/components/mobile-header";
@@ -13,9 +14,7 @@ export default function Dashboard() {
   const { data: user } = useQuery({
     queryKey: ["/api/auth/me"],
     queryFn: async () => {
-      const response = await fetch("/api/auth/me", {
-        headers: getAuthHeaders(),
-      });
+      const response = await apiRequest("GET", "/api/auth/me");
       return response.json();
     },
   });

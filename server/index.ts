@@ -9,8 +9,8 @@ import { setupVite, serveStatic, log } from "./vite";
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
     ? [
-        'https://studyflow-harsh310506.vercel.app', // Update this with your actual Vercel domain
-        'https://studenttasker-frontend.vercel.app', // Alternative domain format
+        'https://studenttasker-frontend.vercel.app', // Your actual Vercel domain
+        'https://studyflow-harsh310506.vercel.app', // Alternative domain format
         /\.vercel\.app$/ // Allow any vercel.app subdomain for flexibility
       ] 
     : ['http://localhost:5173', 'http://127.0.0.1:5173'],
