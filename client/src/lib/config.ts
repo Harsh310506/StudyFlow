@@ -3,7 +3,7 @@ export const config = {
   API_BASE_URL: import.meta.env.VITE_API_URL || (
     import.meta.env.MODE === 'development' 
       ? 'http://localhost:5000'  // Updated to match server port
-      : 'https://your-render-backend-url.onrender.com'
+      : 'https://studenttasker-backend.onrender.com'
   ),
   isDevelopment: import.meta.env.DEV,
   isProduction: import.meta.env.PROD,
@@ -17,7 +17,7 @@ export function getApiUrl(): string {
       return 'http://localhost:5000';
     }
     // For production, use the environment variable or default
-    return import.meta.env.VITE_API_URL || 'https://your-backend-url.onrender.com';
+    return import.meta.env.VITE_API_URL || 'https://studenttasker-backend.onrender.com';
   }
   
   // Server-side fallback

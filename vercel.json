@@ -12,11 +12,11 @@
     }
   ],
   "env": {
-    "VITE_API_URL": "https://your-render-backend-url.onrender.com"
+    "VITE_API_URL": "https://studenttasker-backend.onrender.com"
   },
   "build": {
     "env": {
-      "VITE_API_URL": "https://your-render-backend-url.onrender.com"
+      "VITE_API_URL": "https://studenttasker-backend.onrender.com"
     }
   }
 }
