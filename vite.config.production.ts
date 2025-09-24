@@ -3,14 +3,7 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 
 export default defineConfig({
-  plugins: [
-    react(),
-    // Only include Replit plugins in development
-    ...(process.env.NODE_ENV !== "production" && process.env.REPL_ID 
-      ? [] // We'll skip these for now to avoid import issues
-      : []
-    ),
-  ],
+  plugins: [react()],
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "client", "src"),
