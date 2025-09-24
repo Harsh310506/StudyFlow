@@ -40,10 +40,7 @@ export default function NotesManager() {
   const { data: notes = [], isLoading } = useQuery({
     queryKey: ["/api/notes"],
     queryFn: async () => {
-      const response = await fetch("/api/notes", {
-        headers: getAuthHeaders(),
-      });
-      if (!response.ok) throw new Error("Failed to fetch notes");
+      const response = await apiRequest("GET", "/api/notes");
       return response.json();
     },
   });

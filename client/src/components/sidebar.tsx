@@ -4,6 +4,7 @@ import { ThemeSelector } from "./theme-selector";
 import { removeAuthToken } from "@/lib/auth";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAuthHeaders } from "@/lib/auth";
+import { apiRequest } from "@/lib/queryClient";
 
 export function Sidebar() {
   const [location, setLocation] = useLocation();
@@ -13,9 +14,7 @@ export function Sidebar() {
   const { data: user } = useQuery({
     queryKey: ["/api/auth/me"],
     queryFn: async () => {
-      const response = await fetch("/api/auth/me", {
-        headers: getAuthHeaders(),
-      });
+      const response = await apiRequest("GET", "/api/auth/me");
       return response.json();
     },
   });

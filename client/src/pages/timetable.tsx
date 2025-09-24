@@ -1,6 +1,7 @@
 ﻿import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getAuthHeaders } from "@/lib/auth";
+import { apiRequest } from "@/lib/queryClient";
 import { Sidebar } from "@/components/sidebar";
 import { MobileHeader } from "@/components/mobile-header";
 import { Button } from "@/components/ui/button";
@@ -83,10 +84,7 @@ export default function Timetable() {
   const { data: entries = [], isLoading } = useQuery({
     queryKey: ["/api/timetable"],
     queryFn: async (): Promise<TimetableEntry[]> => {
-      const response = await fetch("/api/timetable", {
-        headers: getAuthHeaders(),
-      });
-      if (!response.ok) throw new Error("Failed to fetch timetable");
+      const response = await apiRequest("GET", "/api/timetable");
       return response.json();
     },
   });
@@ -95,20 +93,7 @@ export default function Timetable() {
   const createEntryMutation = useMutation({
     mutationFn: async (data: InsertTimetable) => {
       console.log("Sending data to server:", data);
-      const response = await fetch("/api/timetable", {
-        method: "POST",
-        headers: {
-          ...getAuthHeaders(),
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Server error:", errorText);
-        throw new Error(`Failed to create entry: ${response.status} ${errorText}`);
-      }
+      const response = await apiRequest("POST", "/api/timetable", data);
       return response.json();
     },
     onSuccess: () => {
@@ -127,20 +112,7 @@ export default function Timetable() {
   const updateEntryMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Partial<InsertTimetable> }) => {
       console.log("Updating entry with data:", data);
-      const response = await fetch(`/api/timetable/${id}`, {
-        method: "PATCH",
-        headers: {
-          ...getAuthHeaders(),
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Server error:", errorText);
-        throw new Error(`Failed to update entry: ${response.status} ${errorText}`);
-      }
+      const response = await apiRequest("PATCH", `/api/timetable/${id}`, data);
       return response.json();
     },
     onSuccess: () => {
@@ -158,11 +130,7 @@ export default function Timetable() {
   // Delete entry mutation
   const deleteEntryMutation = useMutation({
     mutationFn: async (id: string) => {
-      const response = await fetch(`/api/timetable/${id}`, {
-        method: "DELETE",
-        headers: getAuthHeaders(),
-      });
-      if (!response.ok) throw new Error("Failed to delete entry");
+      await apiRequest("DELETE", `/api/timetable/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/timetable"] });

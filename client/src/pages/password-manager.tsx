@@ -56,10 +56,7 @@ export default function PasswordManager() {
   const { data: passwords = [], isLoading } = useQuery({
     queryKey: ["/api/passwords"],
     queryFn: async () => {
-      const response = await fetch("/api/passwords", {
-        headers: getAuthHeaders(),
-      });
-      if (!response.ok) throw new Error("Failed to fetch passwords");
+      const response = await apiRequest("GET", "/api/passwords");
       return response.json();
     },
   });

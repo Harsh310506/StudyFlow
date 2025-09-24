@@ -22,19 +22,15 @@ export default function Dashboard() {
   const { data: todayTasks = [], isLoading: todayLoading } = useQuery({
     queryKey: ["/api/tasks/today"],
     queryFn: async () => {
-      const response = await fetch("/api/tasks/today", {
-        headers: getAuthHeaders(),
-      });
+      const response = await apiRequest("GET", "/api/tasks/today");
       return response.json();
     },
   });
 
-  const { data: upcomingTasks = [] } = useQuery({
+  const { data: upcomingTasks = [], isLoading: upcomingLoading } = useQuery({
     queryKey: ["/api/tasks/upcoming"],
     queryFn: async () => {
-      const response = await fetch("/api/tasks/upcoming?days=7", {
-        headers: getAuthHeaders(),
-      });
+      const response = await apiRequest("GET", "/api/tasks/upcoming?days=7");
       return response.json();
     },
   });
@@ -42,9 +38,7 @@ export default function Dashboard() {
   const { data: stats } = useQuery({
     queryKey: ["/api/tasks/stats"],
     queryFn: async () => {
-      const response = await fetch("/api/tasks/stats", {
-        headers: getAuthHeaders(),
-      });
+      const response = await apiRequest("GET", "/api/tasks/stats");
       return response.json();
     },
   });

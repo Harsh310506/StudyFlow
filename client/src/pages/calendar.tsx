@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getAuthHeaders } from "@/lib/auth";
+import { apiRequest } from "@/lib/queryClient";
 import { Sidebar } from "@/components/sidebar";
 import { MobileHeader } from "@/components/mobile-header";
 import { Task } from "@shared/schema";
@@ -13,9 +14,7 @@ export default function Calendar() {
   const { data: allTasks = [] } = useQuery({
     queryKey: ["/api/tasks"],
     queryFn: async () => {
-      const response = await fetch("/api/tasks", {
-        headers: getAuthHeaders(),
-      });
+      const response = await apiRequest("GET", "/api/tasks");
       return response.json();
     },
   });
