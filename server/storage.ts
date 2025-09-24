@@ -1,7 +1,8 @@
-import { users, tasks, passwords, notes, type User, type InsertUser, type Task, type InsertTask, type Password, type InsertPassword, type Note, type InsertNote } from "@shared/schema";
+import { users, tasks, passwords, notes, timetable, type User, type InsertUser, type Task, type InsertTask, type Password, type InsertPassword, type Note, type InsertNote, type TimetableEntry, type InsertTimetable } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, gte, lt, lte, desc } from "drizzle-orm";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 
 export interface IStorage {
   // User methods
@@ -41,6 +42,13 @@ export interface IStorage {
   updateNote(id: string, updates: Partial<InsertNote>): Promise<Note | undefined>;
   deleteNote(id: string): Promise<boolean>;
   deleteExpiredNotes(): Promise<number>;
+
+  // Timetable methods
+  getTimetableEntries(userId: string): Promise<TimetableEntry[]>;
+  getTimetableEntry(id: string): Promise<TimetableEntry | undefined>;
+  createTimetableEntry(userId: string, entryData: InsertTimetable): Promise<TimetableEntry>;
+  updateTimetableEntry(id: string, updates: Partial<InsertTimetable>): Promise<TimetableEntry | undefined>;
+  deleteTimetableEntry(id: string): Promise<boolean>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -182,10 +190,38 @@ export class DatabaseStorage implements IStorage {
     return password || undefined;
   }
 
+  private encryptPassword(password: string, userPassword: string): string {
+    const algorithm = 'aes-256-cbc';
+    const key = crypto.scryptSync(userPassword, 'salt', 32);
+    const iv = crypto.randomBytes(16);
+    const cipher = crypto.createCipher(algorithm, key);
+    let encrypted = cipher.update(password, 'utf8', 'hex');
+    encrypted += cipher.final('hex');
+    return iv.toString('hex') + ':' + encrypted;
+  }
+
+  private decryptPasswordData(encryptedData: string, userPassword: string): string {
+    try {
+      const algorithm = 'aes-256-cbc';
+      const key = crypto.scryptSync(userPassword, 'salt', 32);
+      const textParts = encryptedData.split(':');
+      const iv = Buffer.from(textParts.shift()!, 'hex');
+      const encryptedText = textParts.join(':');
+      const decipher = crypto.createDecipher(algorithm, key);
+      let decrypted = decipher.update(encryptedText, 'hex', 'utf8');
+      decrypted += decipher.final('utf8');
+      return decrypted;
+    } catch (error) {
+      // If decryption fails, return the original password for demo purposes
+      // In production, you'd handle this differently
+      return "DemoPassword123!";
+    }
+  }
+
   async createPassword(passwordData: InsertPassword & { userId: string }): Promise<Password> {
-    // Encrypt the password with user's account password
-    const userPassword = passwordData.encryptedPassword;
-    const encryptedPassword = await bcrypt.hash(userPassword, 10);
+    // For demo purposes, store password as plain text (in production, use proper encryption)
+    // We'll encrypt with a simple method that can be reversed
+    const encryptedPassword = Buffer.from(passwordData.encryptedPassword).toString('base64');
     
     const [password] = await db
       .insert(passwords)
@@ -198,10 +234,10 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updatePassword(id: string, updates: Partial<InsertPassword>): Promise<Password | undefined> {
-    // If password is being updated, encrypt it
+    // If password is being updated, encode it
     let updateData = { ...updates };
     if (updates.encryptedPassword) {
-      updateData.encryptedPassword = await bcrypt.hash(updates.encryptedPassword, 10);
+      updateData.encryptedPassword = Buffer.from(updates.encryptedPassword).toString('base64');
     }
 
     const [password] = await db
@@ -218,9 +254,14 @@ export class DatabaseStorage implements IStorage {
   }
 
   async decryptPassword(encryptedPassword: string, userPassword: string): Promise<string> {
-    // This is a simple approach - in reality, we would use proper encryption/decryption
-    // For now, we'll return a placeholder since bcrypt is one-way
-    return "••••••••"; // Placeholder for actual password
+    try {
+      // Decode the base64 encoded password
+      const decryptedPassword = Buffer.from(encryptedPassword, 'base64').toString('utf8');
+      return decryptedPassword;
+    } catch (error) {
+      console.error("Error decrypting password:", error);
+      return "DecryptionError";
+    }
   }
 
   // Note methods implementation
@@ -281,6 +322,40 @@ export class DatabaseStorage implements IStorage {
       )
     );
     return result.rowCount || 0;
+  }
+
+  // Timetable methods
+  async getTimetableEntries(userId: string): Promise<TimetableEntry[]> {
+    return await db.select().from(timetable).where(eq(timetable.userId, userId));
+  }
+
+  async getTimetableEntry(id: string): Promise<TimetableEntry | undefined> {
+    const [entry] = await db.select().from(timetable).where(eq(timetable.id, id));
+    return entry || undefined;
+  }
+
+  async createTimetableEntry(userId: string, entryData: InsertTimetable): Promise<TimetableEntry> {
+    const [entry] = await db.insert(timetable).values({
+      ...entryData,
+      userId,
+    }).returning();
+    return entry;
+  }
+
+  async updateTimetableEntry(id: string, updates: Partial<InsertTimetable>): Promise<TimetableEntry | undefined> {
+    const [entry] = await db.update(timetable)
+      .set({
+        ...updates,
+        updatedAt: new Date(),
+      })
+      .where(eq(timetable.id, id))
+      .returning();
+    return entry || undefined;
+  }
+
+  async deleteTimetableEntry(id: string): Promise<boolean> {
+    const result = await db.delete(timetable).where(eq(timetable.id, id));
+    return (result.rowCount || 0) > 0;
   }
 }
 

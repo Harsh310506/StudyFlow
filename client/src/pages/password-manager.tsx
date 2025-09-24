@@ -14,7 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, Plus, Trash2, Shield } from "lucide-react";
+import { Eye, EyeOff, Plus, Trash2, Shield, Copy } from "lucide-react";
 
 const addPasswordSchema = insertPasswordSchema.extend({
   title: z.string().min(1, "Title is required"),
@@ -140,8 +140,15 @@ export default function PasswordManager() {
   };
 
   const handleRevealPassword = (passwordId: string) => {
-    setSelectedPasswordId(passwordId);
-    setIsVerifyDialogOpen(true);
+    if (selectedPasswordId === passwordId && revealedPassword) {
+      // Hide password if already visible
+      setRevealedPassword(null);
+      setSelectedPasswordId(null);
+    } else {
+      // Show password verification dialog
+      setSelectedPasswordId(passwordId);
+      setIsVerifyDialogOpen(true);
+    }
   };
 
   const handleVerifyAndReveal = (data: VerifyPasswordFormData) => {
@@ -318,11 +325,18 @@ export default function PasswordManager() {
                             size="sm"
                             onClick={() => handleRevealPassword(password.id)}
                             data-testid={`button-reveal-${password.id}`}
+                            className={selectedPasswordId === password.id && revealedPassword ? "text-primary" : ""}
                           >
                             {selectedPasswordId === password.id && revealedPassword ? (
-                              <EyeOff className="w-4 h-4" />
+                              <>
+                                <EyeOff className="w-4 h-4" />
+                                <span className="sr-only">Hide password</span>
+                              </>
                             ) : (
-                              <Eye className="w-4 h-4" />
+                              <>
+                                <Eye className="w-4 h-4" />
+                                <span className="sr-only">Show password</span>
+                              </>
                             )}
                           </Button>
                           <Button
@@ -337,14 +351,46 @@ export default function PasswordManager() {
                       </div>
                     </div>
                     {selectedPasswordId === password.id && revealedPassword && (
-                      <div className="mt-4 p-3 bg-muted/50 rounded border">
-                        <Label className="text-xs text-muted-foreground">Password:</Label>
-                        <p className="font-mono text-sm mt-1 font-medium" data-testid={`revealed-password-${password.id}`}>
-                          {revealedPassword}
-                        </p>
-                        <p className="text-xs text-muted-foreground mt-2">
-                          This password will be hidden automatically in 10 seconds for security.
-                        </p>
+                      <div className="mt-4 p-4 bg-muted/30 rounded-lg border border-primary/20">
+                        <div className="flex items-center justify-between mb-2">
+                          <Label className="text-sm font-medium text-foreground">Revealed Password:</Label>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              navigator.clipboard.writeText(revealedPassword);
+                              toast({
+                                title: "Copied!",
+                                description: "Password copied to clipboard",
+                              });
+                            }}
+                            className="h-8 px-2"
+                          >
+                            <i className="fas fa-copy w-3 h-3 mr-1"></i>
+                            Copy
+                          </Button>
+                        </div>
+                        <div className="bg-background p-3 rounded border">
+                          <p className="font-mono text-base font-semibold text-foreground break-all" data-testid={`revealed-password-${password.id}`}>
+                            {revealedPassword}
+                          </p>
+                        </div>
+                        <div className="flex items-center justify-between mt-3">
+                          <p className="text-xs text-muted-foreground">
+                            Password will auto-hide in 10 seconds for security.
+                          </p>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setRevealedPassword(null);
+                              setSelectedPasswordId(null);
+                            }}
+                            className="h-6 px-2 text-xs"
+                          >
+                            Hide Now
+                          </Button>
+                        </div>
                       </div>
                     )}
                   </div>

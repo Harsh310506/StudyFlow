@@ -2,6 +2,19 @@ import { Task } from "@shared/schema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { getAuthHeaders } from "@/lib/auth";
+import { useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 interface TaskCardProps {
   task: Task;
@@ -10,25 +23,71 @@ interface TaskCardProps {
 
 export function TaskCard({ task, onEdit }: TaskCardProps) {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const [isCompletionDialogOpen, setIsCompletionDialogOpen] = useState(false);
+  const [pendingStatus, setPendingStatus] = useState<Task['completionStatus'] | null>(null);
 
   const updateTaskMutation = useMutation({
     mutationFn: async (updates: Partial<Task>) => {
       return apiRequest("PATCH", `/api/tasks/${task.id}`, updates);
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["/api/tasks"] });
       queryClient.invalidateQueries({ queryKey: ["/api/tasks/today"] });
       queryClient.invalidateQueries({ queryKey: ["/api/tasks/stats"] });
+      
+      // Show success toast
+      if (variables.completionStatus) {
+        const statusMessages = {
+          'partial': 'Task marked as partially completed',
+          'half': 'Task marked as half completed',
+          'complete': 'Task marked as fully completed',
+          'pending': 'Task marked as pending'
+        };
+        toast({
+          title: "Task Updated",
+          description: statusMessages[variables.completionStatus] || "Task status updated",
+        });
+      }
     },
   });
 
   const toggleCompletion = () => {
     const newStatus = task.completionStatus === 'complete' ? 'pending' : 'complete';
-    updateTaskMutation.mutate({ completionStatus: newStatus });
+    if (newStatus === 'complete') {
+      // Use confirmation dialog for completing tasks
+      handleCompletionStatusChange('complete');
+    } else {
+      // Directly mark as pending without confirmation
+      updateTaskMutation.mutate({ completionStatus: newStatus });
+    }
+  };
+
+  const handleCompletionStatusChange = (status: Task['completionStatus']) => {
+    setPendingStatus(status);
+    setIsCompletionDialogOpen(true);
+  };
+
+  const confirmCompletionStatusChange = () => {
+    if (pendingStatus) {
+      updateTaskMutation.mutate({ completionStatus: pendingStatus });
+      setIsCompletionDialogOpen(false);
+      setPendingStatus(null);
+    }
+  };
+
+  const getStatusMessage = (status: Task['completionStatus']) => {
+    const messages: Record<Task['completionStatus'], string> = {
+      'partial': 'Mark this task as partially completed? This means you\'ve made some progress but haven\'t finished it yet.',
+      'half': 'Mark this task as half completed? This means you\'re halfway through the task.',
+      'complete': 'Mark this task as fully completed? This will move it to your completed tasks list.',
+      'pending': 'Mark this task as pending? This will move it back to your active tasks.'
+    };
+    return messages[status] || 'Update task status?';
   };
 
   const updateCompletionStatus = (status: Task['completionStatus']) => {
-    updateTaskMutation.mutate({ completionStatus: status });
+    handleCompletionStatusChange(status);
   };
 
   const getPriorityColor = (priority: string) => {
@@ -157,6 +216,29 @@ export function TaskCard({ task, onEdit }: TaskCardProps) {
           )}
         </div>
       </div>
+      
+      {/* Task Completion Confirmation Dialog */}
+      <AlertDialog open={isCompletionDialogOpen} onOpenChange={setIsCompletionDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Update Task Status</AlertDialogTitle>
+            <AlertDialogDescription>
+              {pendingStatus && getStatusMessage(pendingStatus)}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => {
+              setIsCompletionDialogOpen(false);
+              setPendingStatus(null);
+            }}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={confirmCompletionStatusChange}>
+              Confirm
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

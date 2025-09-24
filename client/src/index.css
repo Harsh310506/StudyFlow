@@ -71,6 +71,126 @@
     --shadow-xl: 0 20px 50px -12px rgba(0, 0, 0, 0.6);
 }
 
+/* Custom theme CSS variables for Ocean theme */
+.dark[data-theme="ocean"] {
+    --background: hsl(210, 25%, 8%);
+    --foreground: hsl(200, 50%, 90%);
+    --card: hsl(210, 25%, 10%);
+    --card-foreground: hsl(200, 50%, 90%);
+    --primary: hsl(200, 95%, 45%);
+    --primary-foreground: hsl(210, 25%, 8%);
+    --secondary: hsl(200, 40%, 15%);
+    --secondary-foreground: hsl(200, 50%, 90%);
+    --muted: hsl(200, 40%, 15%);
+    --muted-foreground: hsl(200, 20%, 60%);
+    --accent: hsl(200, 40%, 20%);
+    --accent-foreground: hsl(200, 95%, 45%);
+    --border: hsl(200, 40%, 15%);
+    --input: hsl(200, 40%, 15%);
+    --ring: hsl(200, 95%, 45%);
+    --success: hsl(142, 76%, 36%);
+    --warning: hsl(38, 92%, 50%);
+    --focus-primary: hsl(200, 95%, 45%);
+    --focus-secondary: hsl(195, 85%, 35%);
+    --focus-accent: hsl(200, 40%, 20%);
+}
+
+/* Custom theme CSS variables for Forest theme */
+.dark[data-theme="forest"] {
+    --background: hsl(120, 10%, 5%);
+    --foreground: hsl(142, 50%, 85%);
+    --card: hsl(120, 10%, 8%);
+    --card-foreground: hsl(142, 50%, 85%);
+    --primary: hsl(142, 76%, 36%);
+    --primary-foreground: hsl(120, 10%, 5%);
+    --secondary: hsl(142, 30%, 10%);
+    --secondary-foreground: hsl(142, 50%, 85%);
+    --muted: hsl(142, 30%, 10%);
+    --muted-foreground: hsl(142, 20%, 55%);
+    --accent: hsl(142, 30%, 15%);
+    --accent-foreground: hsl(142, 76%, 36%);
+    --border: hsl(142, 30%, 10%);
+    --input: hsl(142, 30%, 10%);
+    --ring: hsl(142, 76%, 36%);
+    --success: hsl(142, 76%, 36%);
+    --warning: hsl(38, 92%, 50%);
+    --focus-primary: hsl(142, 76%, 36%);
+    --focus-secondary: hsl(138, 65%, 28%);
+    --focus-accent: hsl(142, 30%, 15%);
+}
+
+/* Custom theme CSS variables for Sunset theme */
+.dark[data-theme="sunset"] {
+    --background: hsl(20, 14%, 4%);
+    --foreground: hsl(25, 50%, 85%);
+    --card: hsl(20, 14%, 7%);
+    --card-foreground: hsl(25, 50%, 85%);
+    --primary: hsl(25, 95%, 53%);
+    --primary-foreground: hsl(20, 14%, 4%);
+    --secondary: hsl(25, 40%, 12%);
+    --secondary-foreground: hsl(25, 50%, 85%);
+    --muted: hsl(25, 40%, 12%);
+    --muted-foreground: hsl(25, 20%, 55%);
+    --accent: hsl(25, 40%, 18%);
+    --accent-foreground: hsl(25, 95%, 53%);
+    --border: hsl(25, 40%, 12%);
+    --input: hsl(25, 40%, 12%);
+    --ring: hsl(25, 95%, 53%);
+    --success: hsl(142, 76%, 36%);
+    --warning: hsl(38, 92%, 50%);
+    --focus-primary: hsl(25, 95%, 53%);
+    --focus-secondary: hsl(30, 85%, 43%);
+    --focus-accent: hsl(25, 40%, 18%);
+}
+
+/* Custom theme CSS variables for Purple theme */
+.dark[data-theme="purple"] {
+    --background: hsl(263, 15%, 5%);
+    --foreground: hsl(263, 50%, 85%);
+    --card: hsl(263, 15%, 8%);
+    --card-foreground: hsl(263, 50%, 85%);
+    --primary: hsl(263, 85%, 60%);
+    --primary-foreground: hsl(263, 15%, 5%);
+    --secondary: hsl(263, 30%, 12%);
+    --secondary-foreground: hsl(263, 50%, 85%);
+    --muted: hsl(263, 30%, 12%);
+    --muted-foreground: hsl(263, 20%, 55%);
+    --accent: hsl(263, 30%, 18%);
+    --accent-foreground: hsl(263, 85%, 60%);
+    --border: hsl(263, 30%, 12%);
+    --input: hsl(263, 30%, 12%);
+    --ring: hsl(263, 85%, 60%);
+    --success: hsl(142, 76%, 36%);
+    --warning: hsl(38, 92%, 50%);
+    --focus-primary: hsl(263, 85%, 60%);
+    --focus-secondary: hsl(268, 75%, 50%);
+    --focus-accent: hsl(263, 30%, 18%);
+}
+
+/* Custom theme CSS variables for Rose theme */
+.dark[data-theme="rose"] {
+    --background: hsl(330, 10%, 5%);
+    --foreground: hsl(330, 50%, 85%);
+    --card: hsl(330, 10%, 8%);
+    --card-foreground: hsl(330, 50%, 85%);
+    --primary: hsl(330, 81%, 60%);
+    --primary-foreground: hsl(330, 10%, 5%);
+    --secondary: hsl(330, 25%, 12%);
+    --secondary-foreground: hsl(330, 50%, 85%);
+    --muted: hsl(330, 25%, 12%);
+    --muted-foreground: hsl(330, 20%, 55%);
+    --accent: hsl(330, 25%, 18%);
+    --accent-foreground: hsl(330, 81%, 60%);
+    --border: hsl(330, 25%, 12%);
+    --input: hsl(330, 25%, 12%);
+    --ring: hsl(330, 81%, 60%);
+    --success: hsl(142, 76%, 36%);
+    --warning: hsl(38, 92%, 50%);
+    --focus-primary: hsl(330, 81%, 60%);
+    --focus-secondary: hsl(335, 71%, 50%);
+    --focus-accent: hsl(330, 25%, 18%);
+}
+
 @layer base {
     * {
         @apply border-border;
@@ -88,6 +208,60 @@
     h6 {
         font-weight: 600;
         line-height: 1.2;
+    }
+}
+
+/* Mobile-first responsive utilities */
+@layer utilities {
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    /* Touch-friendly button sizes */
+    .touch-target {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* Mobile-optimized spacing */
+    .mobile-container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    @media (min-width: 640px) {
+        .mobile-container {
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+        }
+    }
+    
+    @media (min-width: 1024px) {
+        .mobile-container {
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+    }
+    
+    /* Responsive text truncation */
+    .truncate-mobile {
+        @apply truncate;
+    }
+    
+    @media (min-width: 640px) {
+        .truncate-mobile {
+            white-space: normal;
+        }
     }
 }
 
@@ -404,16 +578,38 @@
 .completion-full {
     background-color: hsl(var(--success));
     color: white;
+    border: 1px solid hsl(var(--success));
 }
 
 .completion-half {
     background-color: hsl(var(--warning));
     color: white;
+    border: 1px solid hsl(var(--warning));
 }
 
 .completion-partial {
     background-color: hsl(var(--muted));
     color: hsl(var(--muted-foreground));
+    border: 1px solid hsl(var(--border));
+}
+
+/* Hover effects for completion buttons */
+.completion-full:hover {
+    background-color: hsl(var(--success) / 0.9);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px hsl(var(--success) / 0.2);
+}
+
+.completion-half:hover {
+    background-color: hsl(var(--warning) / 0.9);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px hsl(var(--warning) / 0.2);
+}
+
+.completion-partial:hover {
+    background-color: hsl(var(--muted) / 0.8);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px hsl(var(--muted) / 0.2);
 }
 
 
@@ -649,6 +845,7 @@
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 1;
+    line-clamp: 1;
     -webkit-box-orient: vertical;
 }
 
@@ -656,6 +853,7 @@
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
 }
 
@@ -663,6 +861,7 @@
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
 }
 

@@ -105,11 +105,11 @@ export default function Dashboard() {
       <div className="lg:pl-64">
         <main className="min-h-screen bg-background">
           {/* Header Section */}
-          <div className="px-4 sm:px-6 lg:px-8 py-6">
-            <div className="bg-card rounded-lg border border-border p-4 sm:p-6">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                  <h1 className="text-xl sm:text-2xl font-bold text-foreground" data-testid="text-greeting">
+          <div className="px-3 sm:px-4 lg:px-8 py-4 lg:py-6">
+            <div className="bg-card rounded-lg border border-border p-4 lg:p-6">
+              <div className="flex flex-col gap-4">
+                <div className="text-center sm:text-left">
+                  <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground" data-testid="text-greeting">
                     {getGreeting()}, {user?.firstName || "Student"}!
                   </h1>
                   <p className="mt-1 text-sm text-muted-foreground" data-testid="text-today-date">
@@ -119,7 +119,7 @@ export default function Dashboard() {
                 <Button 
                   onClick={() => setLocation("/add-task")}
                   data-testid="button-add-task"
-                  className="bg-primary hover:bg-primary/90 w-full sm:w-auto"
+                  className="bg-primary hover:bg-primary/90 w-full sm:w-auto sm:self-start lg:self-end lg:absolute lg:top-4 lg:right-6"
                 >
                   <i className="fas fa-plus mr-2"></i>
                   Add Task
@@ -129,50 +129,50 @@ export default function Dashboard() {
           </div>
           
           {/* Stats Overview */}
-          <div className="px-4 sm:px-6 lg:px-8 mb-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="stats-card p-4">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                      <i className="fas fa-calendar-day text-primary"></i>
+          <div className="px-3 sm:px-4 lg:px-8 mb-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+              <div className="stats-card p-3 lg:p-4">
+                <div className="flex flex-col sm:flex-row sm:items-center">
+                  <div className="flex-shrink-0 mb-2 sm:mb-0 sm:mr-3">
+                    <div className="w-8 h-8 lg:w-10 lg:h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                      <i className="fas fa-calendar-day text-primary text-sm lg:text-base"></i>
                     </div>
                   </div>
-                  <div className="ml-4 flex-1">
-                    <p className="text-sm font-medium text-muted-foreground">Today's Tasks</p>
-                    <p className="text-2xl font-bold text-foreground" data-testid="stat-today-total">
+                  <div className="flex-1 text-center sm:text-left">
+                    <p className="text-xs lg:text-sm font-medium text-muted-foreground">Today's Tasks</p>
+                    <p className="text-lg lg:text-2xl font-bold text-foreground" data-testid="stat-today-total">
                       {todayTasks.length}
                     </p>
                   </div>
                 </div>
               </div>
               
-              <div className="stats-card p-4">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <div className="w-10 h-10 bg-success/10 rounded-lg flex items-center justify-center">
-                      <i className="fas fa-check-circle text-success"></i>
+              <div className="stats-card p-3 lg:p-4">
+                <div className="flex flex-col sm:flex-row sm:items-center">
+                  <div className="flex-shrink-0 mb-2 sm:mb-0 sm:mr-3">
+                    <div className="w-8 h-8 lg:w-10 lg:h-10 bg-success/10 rounded-lg flex items-center justify-center">
+                      <i className="fas fa-check-circle text-success text-sm lg:text-base"></i>
                     </div>
                   </div>
-                  <div className="ml-4 flex-1">
-                    <p className="text-sm font-medium text-muted-foreground">Completed</p>
-                    <p className="text-2xl font-bold text-foreground" data-testid="stat-completed">
+                  <div className="flex-1 text-center sm:text-left">
+                    <p className="text-xs lg:text-sm font-medium text-muted-foreground">Completed</p>
+                    <p className="text-lg lg:text-2xl font-bold text-foreground" data-testid="stat-completed">
                       {stats?.completed || 0}
                     </p>
                   </div>
                 </div>
               </div>
               
-              <div className="stats-card p-4">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <div className="w-10 h-10 bg-warning/10 rounded-lg flex items-center justify-center">
-                      <i className="fas fa-hourglass-half text-warning"></i>
+              <div className="stats-card p-3 lg:p-4">
+                <div className="flex flex-col sm:flex-row sm:items-center">
+                  <div className="flex-shrink-0 mb-2 sm:mb-0 sm:mr-3">
+                    <div className="w-8 h-8 lg:w-10 lg:h-10 bg-warning/10 rounded-lg flex items-center justify-center">
+                      <i className="fas fa-hourglass-half text-warning text-sm lg:text-base"></i>
                     </div>
                   </div>
-                  <div className="ml-4 flex-1">
-                    <p className="text-sm font-medium text-muted-foreground">Pending</p>
-                    <p className="text-2xl font-bold text-foreground" data-testid="stat-pending">
+                  <div className="flex-1 text-center sm:text-left">
+                    <p className="text-xs lg:text-sm font-medium text-muted-foreground">Pending</p>
+                    <p className="text-lg lg:text-2xl font-bold text-foreground" data-testid="stat-pending">
                       {stats?.pending || 0}
                     </p>
                   </div>
@@ -198,46 +198,49 @@ export default function Dashboard() {
           </div>
           
           {/* All Pending Tasks Section */}
-          <div className="px-4 sm:px-6 lg:px-8 mb-8">
+          <div className="px-3 sm:px-4 lg:px-8 mb-8">
             <div className="stats-card border-0 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 fade-in" style={{animationDelay: '0.5s'}}>
-              <div className="px-6 py-5 border-b border-gray-200/50 dark:border-gray-700/50">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
-                    <i className="fas fa-calendar-day text-white text-lg"></i>
+              <div className="px-4 lg:px-6 py-4 lg:py-5 border-b border-gray-200/50 dark:border-gray-700/50">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                  <div className="flex items-center space-x-3 flex-1">
+                    <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
+                      <i className="fas fa-calendar-day text-white text-sm lg:text-lg"></i>
+                    </div>
+                    <div>
+                      <h2 className="text-lg lg:text-xl font-semibold text-foreground">Today's Focus</h2>
+                      <p className="text-xs lg:text-sm text-muted-foreground">Tasks due today and overall priorities</p>
+                    </div>
                   </div>
-                  <div>
-                    <h2 className="text-xl font-semibold text-foreground">Today's Focus</h2>
-                    <p className="text-sm text-muted-foreground">Tasks due today and overall priorities</p>
-                  </div>
-                  <div className="ml-auto flex items-center space-x-2">
+                  <div className="flex items-center justify-center sm:justify-end space-x-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                     <span className="text-xs text-muted-foreground">Live</span>
                   </div>
                 </div>
               </div>
               
-              <div className="p-6">
+              <div className="p-4 lg:p-6">
                 {todayTasks.length === 0 ? (
-                  <div className="text-center py-8">
-                    <div className="w-16 h-16 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <i className="fas fa-trophy text-success text-xl"></i>
+                  <div className="text-center py-6 lg:py-8">
+                    <div className="w-12 h-12 lg:w-16 lg:h-16 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <i className="fas fa-trophy text-success text-lg lg:text-xl"></i>
                     </div>
-                    <h3 className="text-lg font-semibold text-foreground mb-2">
+                    <h3 className="text-base lg:text-lg font-semibold text-foreground mb-2">
                       All caught up!
                     </h3>
-                    <p className="text-muted-foreground mb-4">
+                    <p className="text-sm text-muted-foreground mb-4">
                       No tasks for today. Great job staying on top of things!
                     </p>
                     <Button 
                       onClick={() => setLocation("/add-task")}
                       variant="outline"
+                      className="w-full sm:w-auto"
                     >
                       <i className="fas fa-plus mr-2"></i>
                       Add tomorrow's tasks
                     </Button>
                   </div>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="space-y-3 lg:space-y-4">
                     {todayTasks.map((task: Task) => (
                       <TaskCard key={task.id} task={task} />
                     ))}
@@ -248,29 +251,29 @@ export default function Dashboard() {
           </div>
           
           {/* Upcoming Tasks */}
-          <div className="px-4 sm:px-6 lg:px-8 mb-8">
+          <div className="px-3 sm:px-4 lg:px-8 mb-8">
             <div className="bg-card rounded-lg border border-border">
-              <div className="px-6 py-4 border-b border-border">
-                <h2 className="text-lg font-semibold text-foreground">Upcoming Tasks</h2>
-                <p className="text-sm text-muted-foreground">Tasks scheduled for the next few days</p>
+              <div className="px-4 lg:px-6 py-3 lg:py-4 border-b border-border">
+                <h2 className="text-base lg:text-lg font-semibold text-foreground">Upcoming Tasks</h2>
+                <p className="text-xs lg:text-sm text-muted-foreground">Tasks scheduled for the next few days</p>
               </div>
               
-              <div className="p-6">
-                <div className="space-y-6">
+              <div className="p-4 lg:p-6">
+                <div className="space-y-4 lg:space-y-6">
                   {/* Tomorrow */}
                   {tomorrowTasks.length > 0 && (
                     <div>
-                      <h3 className="text-sm font-medium text-muted-foreground mb-3">Tomorrow</h3>
-                      <div className="space-y-3">
+                      <h3 className="text-sm font-medium text-muted-foreground mb-2 lg:mb-3">Tomorrow</h3>
+                      <div className="space-y-2 lg:space-y-3">
                         {tomorrowTasks.map((task: Task) => (
                           <div key={task.id} className={`task-card priority-${task.priority} bg-background rounded-lg border border-border p-3`}>
                             <div className="flex items-center space-x-3">
-                              <div className={`w-2 h-2 rounded-full ${
+                              <div className={`w-2 h-2 rounded-full flex-shrink-0 ${
                                 task.priority === 'high' ? 'bg-destructive' : 
                                 task.priority === 'medium' ? 'bg-warning' : 'bg-success'
                               }`}></div>
-                              <div className="flex-1">
-                                <h4 className="text-sm font-medium text-foreground">{task.title}</h4>
+                              <div className="flex-1 min-w-0">
+                                <h4 className="text-sm font-medium text-foreground truncate">{task.title}</h4>
                                 {task.dueTime && (
                                   <p className="text-xs text-muted-foreground">
                                     {new Date(`2000-01-01T${task.dueTime}`).toLocaleTimeString([], { 
@@ -280,8 +283,11 @@ export default function Dashboard() {
                                   </p>
                                 )}
                               </div>
-                              <span className="text-xs text-muted-foreground">
+                              <span className="text-xs text-muted-foreground hidden sm:inline">
                                 {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
+                              </span>
+                              <span className="text-xs text-muted-foreground sm:hidden">
+                                {task.priority.charAt(0).toUpperCase()}
                               </span>
                             </div>
                           </div>
@@ -293,8 +299,8 @@ export default function Dashboard() {
                   {/* This Week */}
                   {thisWeekTasks.length > 0 && (
                     <div>
-                      <h3 className="text-sm font-medium text-muted-foreground mb-3">This Week</h3>
-                      <div className="space-y-3">
+                      <h3 className="text-sm font-medium text-muted-foreground mb-2 lg:mb-3">This Week</h3>
+                      <div className="space-y-2 lg:space-y-3">
                         {thisWeekTasks.map((task: Task) => (
                           <div key={task.id} className={`task-card priority-${task.priority} bg-background rounded-lg border border-border p-3`}>
                             <div className="flex items-center space-x-3">

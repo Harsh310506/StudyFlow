@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertUserSchema, insertTaskSchema, loginSchema, insertPasswordSchema, verifyPasswordSchema, insertNoteSchema } from "@shared/schema";
+import { insertUserSchema, insertTaskSchema, loginSchema, insertPasswordSchema, verifyPasswordSchema, insertNoteSchema, insertTimetableSchema } from "@shared/schema";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { z } from "zod";
@@ -413,6 +413,80 @@ export async function registerRoutes(app: Express): Promise<Server> {
         res.status(204).send();
       } else {
         res.status(404).json({ message: "Note not found" });
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Timetable routes
+  app.get("/api/timetable", authenticateToken, async (req: any, res) => {
+    try {
+      const entries = await storage.getTimetableEntries(req.userId);
+      res.json(entries);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post("/api/timetable", authenticateToken, async (req: any, res) => {
+    try {
+      console.log("Received timetable data:", req.body);
+      const entryData = insertTimetableSchema.parse(req.body);
+      console.log("Parsed entry data:", entryData);
+      const entry = await storage.createTimetableEntry(req.userId, entryData);
+      res.status(201).json(entry);
+    } catch (error) {
+      console.error("Timetable creation error:", error);
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ message: "Invalid data", errors: error.errors });
+      } else {
+        res.status(500).json({ message: "Internal server error", error: error instanceof Error ? error.message : String(error) });
+      }
+    }
+  });
+
+  app.patch("/api/timetable/:id", authenticateToken, async (req: any, res) => {
+    try {
+      const entryId = req.params.id;
+      const entryData = insertTimetableSchema.partial().parse(req.body);
+      
+      // Verify entry belongs to user
+      const existingEntry = await storage.getTimetableEntry(entryId);
+      if (!existingEntry || existingEntry.userId !== req.userId) {
+        return res.status(404).json({ message: "Timetable entry not found" });
+      }
+
+      const updatedEntry = await storage.updateTimetableEntry(entryId, entryData);
+      if (updatedEntry) {
+        res.json(updatedEntry);
+      } else {
+        res.status(404).json({ message: "Timetable entry not found" });
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ message: "Invalid data", errors: error.errors });
+      } else {
+        res.status(500).json({ message: "Internal server error" });
+      }
+    }
+  });
+
+  app.delete("/api/timetable/:id", authenticateToken, async (req: any, res) => {
+    try {
+      const entryId = req.params.id;
+      
+      // Verify entry belongs to user
+      const existingEntry = await storage.getTimetableEntry(entryId);
+      if (!existingEntry || existingEntry.userId !== req.userId) {
+        return res.status(404).json({ message: "Timetable entry not found" });
+      }
+
+      const deleted = await storage.deleteTimetableEntry(entryId);
+      if (deleted) {
+        res.status(204).send();
+      } else {
+        res.status(404).json({ message: "Timetable entry not found" });
       }
     } catch (error) {
       res.status(500).json({ message: "Internal server error" });

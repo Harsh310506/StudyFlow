@@ -50,6 +50,23 @@ export const notes = pgTable("notes", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+export const timetable = pgTable("timetable", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  day: text("day", { enum: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "All Days"] }).notNull(),
+  startTime: text("start_time").notNull(),
+  endTime: text("end_time").notNull(),
+  subject: text("subject").notNull(),
+  type: text("type", { enum: ["class", "study", "break", "activity", "meal", "other"] }).notNull().default("class"),
+  location: text("location"),
+  instructor: text("instructor"),
+  notes: text("notes"),
+  color: text("color").notNull().default("#3B82F6"),
+  isAllDay: boolean("is_all_day").notNull().default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   createdAt: true,
@@ -77,6 +94,13 @@ export const insertNoteSchema = createInsertSchema(notes).omit({
   updatedAt: true,
 });
 
+export const insertTimetableSchema = createInsertSchema(timetable).omit({
+  id: true,
+  userId: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 export const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
@@ -94,5 +118,7 @@ export type InsertPassword = z.infer<typeof insertPasswordSchema>;
 export type Password = typeof passwords.$inferSelect;
 export type InsertNote = z.infer<typeof insertNoteSchema>;
 export type Note = typeof notes.$inferSelect;
+export type InsertTimetable = z.infer<typeof insertTimetableSchema>;
+export type TimetableEntry = typeof timetable.$inferSelect;
 export type LoginCredentials = z.infer<typeof loginSchema>;
 export type VerifyPassword = z.infer<typeof verifyPasswordSchema>;

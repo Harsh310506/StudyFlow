@@ -1,5 +1,6 @@
 import { useLocation } from "wouter";
 import { useTheme } from "./theme-provider";
+import { ThemeSelector } from "./theme-selector";
 import { removeAuthToken } from "@/lib/auth";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAuthHeaders } from "@/lib/auth";
@@ -35,6 +36,7 @@ export function Sidebar() {
     { path: "/calendar", icon: "fas fa-calendar-alt", label: "Calendar", key: "calendar" },
     { path: "/password-manager", icon: "fas fa-shield-alt", label: "Password Manager", key: "password-manager" },
     { path: "/notes", icon: "fas fa-sticky-note", label: "Notes Manager", key: "notes" },
+    { path: "/timetable", icon: "fas fa-calendar-week", label: "Timetable", key: "timetable" },
     { path: "/progress", icon: "fas fa-chart-line", label: "Progress", key: "progress" },
   ];
 
@@ -43,11 +45,26 @@ export function Sidebar() {
       <div className="flex flex-col flex-grow bg-card border-r border-border pt-5 pb-4 overflow-y-auto">
         <div className="flex items-center flex-shrink-0 px-4 mb-8">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
-              <i className="fas fa-bullseye text-white text-lg"></i>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg">
+              <img 
+                src="/shared/logo.png" 
+                alt="StudyFlow Logo" 
+                className="w-10 h-10 rounded-xl object-contain"
+                onError={(e) => {
+                  // Fallback to original icon if logo fails to load
+                  e.currentTarget.style.display = 'none';
+                  const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                  if (fallback) {
+                    fallback.style.display = 'flex';
+                  }
+                }}
+              />
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl items-center justify-center shadow-lg hidden">
+                <i className="fas fa-bullseye text-white text-lg"></i>
+              </div>
             </div>
             <div>
-              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Focusly</h1>
+              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">StudyFlow</h1>
               <p className="text-xs text-muted-foreground font-medium">Focus. Achieve. Succeed.</p>
             </div>
           </div>
@@ -102,14 +119,10 @@ export function Sidebar() {
         {/* Bottom Actions */}
         <div className="px-4 mt-auto space-y-3">
           <div className="border-t border-border pt-4">
-            <button 
-              onClick={toggleDarkMode}
-              className="w-full flex items-center px-4 py-3 text-sm font-medium text-muted-foreground rounded-lg hover:bg-accent hover:text-foreground transition-colors"
-              data-testid="button-toggle-theme"
-            >
-              <i className={`fas ${theme === "dark" ? "fa-sun" : "fa-moon"} mr-3 w-5`}></i>
-              <span>{theme === "dark" ? "Light Mode" : "Dark Mode"}</span>
-            </button>
+            <div className="flex items-center justify-between mb-3 px-4">
+              <span className="text-sm font-medium text-foreground">Theme</span>
+              <ThemeSelector />
+            </div>
             <button 
               onClick={handleLogout}
               className="w-full flex items-center px-4 py-3 text-sm font-medium text-destructive rounded-lg hover:bg-destructive hover:text-destructive-foreground transition-colors"

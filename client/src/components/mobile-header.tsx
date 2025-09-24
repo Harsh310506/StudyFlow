@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { useTheme } from "./theme-provider";
+import { ThemeSelector } from "./theme-selector";
 import { removeAuthToken } from "@/lib/auth";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -27,6 +28,7 @@ export function MobileHeader() {
     { path: "/calendar", icon: "fas fa-calendar-alt", label: "Calendar", key: "calendar" },
     { path: "/password-manager", icon: "fas fa-shield-alt", label: "Password Manager", key: "password-manager" },
     { path: "/notes", icon: "fas fa-sticky-note", label: "Notes Manager", key: "notes" },
+    { path: "/timetable", icon: "fas fa-calendar-week", label: "Timetable", key: "timetable" },
     { path: "/progress", icon: "fas fa-chart-line", label: "Progress", key: "progress" },
   ];
 
@@ -49,14 +51,7 @@ export function MobileHeader() {
         </div>
         
         <div className="flex items-center space-x-2">
-          <button 
-            onClick={toggleDarkMode}
-            className="p-2 rounded-md text-muted-foreground hover:bg-accent transition-colors"
-            data-testid="button-mobile-theme-toggle"
-            aria-label="Toggle theme"
-          >
-            <i className={`fas ${theme === "dark" ? "fa-sun" : "fa-moon"}`}></i>
-          </button>
+          <ThemeSelector />
           
           <button 
             onClick={() => setIsMenuOpen(!isMenuOpen)}

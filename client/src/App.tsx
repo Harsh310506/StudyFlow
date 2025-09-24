@@ -14,6 +14,7 @@ import Calendar from "@/pages/calendar";
 import PasswordManager from "@/pages/password-manager";
 import NotesManager from "@/pages/notes-manager";
 import Progress from "@/pages/progress";
+import Timetable from "@/pages/timetable";
 
 function Router() {
   return (
@@ -48,6 +49,11 @@ function Router() {
       <Route path="/progress">
         <ProtectedRoute>
           <Progress />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/timetable">
+        <ProtectedRoute>
+          <Timetable />
         </ProtectedRoute>
       </Route>
       <Route component={NotFound} />
